@@ -7,57 +7,48 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
 :root{
-  --gold:#FFD700;--gold2:#FFA500;--gold3:#FF8C00;
-  --navy:#07091A;--dark:#03040C;--mid:#0C0F22;
-  --accent:#FF5722;--white:#fff;
-  --glass:rgba(8,10,26,.88);--gb:rgba(255,215,0,.15);
-  --grass1:#0D5A1A;--grass2:#094A13;--grass3:#063C0E;
-  --panel-bg:rgba(7,9,20,.92);
-  --gold-border:rgba(255,200,60,.55);
-  --gold-glow:rgba(255,200,0,.35);
+  --bg:#0C0D12;--surface:#161720;--surface2:#1D1E2A;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --text:#FFFFFF;--text2:rgba(255,255,255,.5);--text3:rgba(255,255,255,.22);
+  --gold:#C9A227;--gold-l:#E8BE3A;
+  --success:#2FA84F;--danger:#C94040;
+  --grass-a:#226618;--grass-b:#1A500F;
 }
 body{
-  background:radial-gradient(ellipse at 50% 0%,#0A1230 0%,#030409 100%);
+  background:#000;
   font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;
   display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden;
 }
 
 /* ── CONTAINER ── */
 #app{
-  width:390px;height:844px;background:var(--navy);position:relative;
+  width:390px;height:844px;background:var(--bg);position:relative;
   overflow:hidden;border-radius:44px;
-  box-shadow:
-    0 0 0 1px rgba(255,200,60,.25),
-    0 0 40px rgba(255,180,0,.12),
-    0 0 120px rgba(0,0,0,.9),
-    inset 0 0 80px rgba(0,0,20,.5);
+  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 60px 160px rgba(0,0,0,.95);
 }
 @media(max-height:860px){#app{border-radius:0;height:100vh;width:100vw;max-width:390px}}
 
 /* ── STADIUM BG ── */
 .stadium{
   position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 600px 300px at 50% -10%,rgba(20,50,120,.35) 0%,transparent 70%),
-    linear-gradient(180deg,#04060F 0%,#080C1E 25%,#060A18 55%,#030508 100%);
+  background:linear-gradient(180deg,#07080E 0%,#0A0C16 35%,#070910 100%);
 }
 .lights{
-  position:absolute;top:0;left:0;right:0;height:220px;
+  position:absolute;top:0;left:0;right:0;height:180px;
   background:
-    radial-gradient(ellipse 160px 100px at 10% 0%,rgba(255,220,120,.18) 0%,transparent 65%),
-    radial-gradient(ellipse 160px 100px at 90% 0%,rgba(255,220,120,.18) 0%,transparent 65%),
-    radial-gradient(ellipse 300px 180px at 50% -10%,rgba(100,160,255,.08) 0%,transparent 75%);
+    radial-gradient(ellipse 140px 80px at 8% 0%,rgba(255,230,150,.08) 0%,transparent 70%),
+    radial-gradient(ellipse 140px 80px at 92% 0%,rgba(255,230,150,.08) 0%,transparent 70%);
 }
 .stadium::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:120px;
-  background:linear-gradient(180deg,rgba(4,6,15,.6) 0%,transparent 100%);
+  content:'';position:absolute;top:0;left:0;right:0;height:80px;
+  background:linear-gradient(180deg,rgba(7,8,14,.45) 0%,transparent 100%);
   pointer-events:none;
 }
 .crowd{
-  position:absolute;top:56px;left:0;right:0;height:55px;overflow:hidden;
+  position:absolute;top:56px;left:0;right:0;height:44px;overflow:hidden;
 }
 .crowd::before{content:'';position:absolute;inset:0;
-  background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='390' height='55'><g fill='rgba(255,255,255,0.07)'><ellipse cx='15' cy='45' rx='8' ry='12'/><ellipse cx='35' cy='42' rx='7' ry='11'/><ellipse cx='55' cy='44' rx='8' ry='13'/><ellipse cx='75' cy='41' rx='7' ry='12'/><ellipse cx='95' cy='43' rx='8' ry='11'/><ellipse cx='115' cy='44' rx='7' ry='13'/><ellipse cx='135' cy='42' rx='8' ry='12'/><ellipse cx='155' cy='45' rx='7' ry='11'/><ellipse cx='175' cy='43' rx='8' ry='12'/><ellipse cx='195' cy='44' rx='7' ry='13'/><ellipse cx='215' cy='42' rx='8' ry='11'/><ellipse cx='235' cy='45' rx='7' ry='12'/><ellipse cx='255' cy='43' rx='8' ry='13'/><ellipse cx='275' cy='41' rx='7' ry='11'/><ellipse cx='295' cy='44' rx='8' ry='12'/><ellipse cx='315' cy='42' rx='7' ry='13'/><ellipse cx='335' cy='45' rx='8' ry='11'/><ellipse cx='355' cy='43' rx='7' ry='12'/><ellipse cx='375' cy='44' rx='8' ry='13'/></g><g fill='rgba(255,255,255,0.05)'><ellipse cx='25' cy='35' rx='6' ry='10'/><ellipse cx='45' cy='32' rx='7' ry='11'/><ellipse cx='65' cy='34' rx='6' ry='10'/><ellipse cx='85' cy='31' rx='7' ry='11'/><ellipse cx='105' cy='33' rx='6' ry='10'/><ellipse cx='125' cy='34' rx='7' ry='12'/><ellipse cx='145' cy='32' rx='6' ry='10'/><ellipse cx='165' cy='35' rx='7' ry='11'/><ellipse cx='185' cy='33' rx='6' ry='10'/><ellipse cx='205' cy='34' rx='7' ry='11'/><ellipse cx='225' cy='32' rx='6' ry='12'/><ellipse cx='245' cy='35' rx='7' ry='10'/><ellipse cx='265' cy='33' rx='6' ry='11'/><ellipse cx='285' cy='31' rx='7' ry='10'/><ellipse cx='305' cy='34' rx='6' ry='11'/><ellipse cx='325' cy='32' rx='7' ry='12'/><ellipse cx='345' cy='35' rx='6' ry='10'/><ellipse cx='365' cy='33' rx='7' ry='11'/></g></svg>") no-repeat;
+  background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='390' height='44'><g fill='rgba(255,255,255,0.05)'><ellipse cx='15' cy='38' rx='7' ry='10'/><ellipse cx='35' cy='35' rx='6' ry='9'/><ellipse cx='55' cy='37' rx='7' ry='11'/><ellipse cx='75' cy='34' rx='6' ry='10'/><ellipse cx='95' cy='36' rx='7' ry='9'/><ellipse cx='115' cy='37' rx='6' ry='11'/><ellipse cx='135' cy='35' rx='7' ry='10'/><ellipse cx='155' cy='38' rx='6' ry='9'/><ellipse cx='175' cy='36' rx='7' ry='10'/><ellipse cx='195' cy='37' rx='6' ry='11'/><ellipse cx='215' cy='35' rx='7' ry='9'/><ellipse cx='235' cy='38' rx='6' ry='10'/><ellipse cx='255' cy='36' rx='7' ry='11'/><ellipse cx='275' cy='34' rx='6' ry='9'/><ellipse cx='295' cy='37' rx='7' ry='10'/><ellipse cx='315' cy='35' rx='6' ry='11'/><ellipse cx='335' cy='38' rx='7' ry='9'/><ellipse cx='355' cy='36' rx='6' ry='10'/><ellipse cx='375' cy='37' rx='7' ry='11'/></g></svg>") no-repeat;
 }
 
 /* ── TOP BAR ── */
@@ -67,58 +58,57 @@ body{
   padding:14px 16px 0;height:56px;
 }
 .btn-exit{
-  background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
-  border:1px solid rgba(255,255,255,.18);
-  color:rgba(255,255,255,.85);padding:6px 14px;border-radius:20px;font-size:12px;
-  cursor:pointer;transition:.2s;flex-shrink:0;letter-spacing:.5px;
-  box-shadow:0 2px 8px rgba(0,0,0,.4);
+  background:var(--surface);border:1px solid var(--border2);
+  color:var(--text2);padding:6px 14px;border-radius:8px;font-size:12px;
+  cursor:pointer;transition:.15s;flex-shrink:0;letter-spacing:.3px;
 }
-.btn-exit:active{opacity:.7;transform:scale(.96)}
+.btn-exit:active{opacity:.7}
 .balance{
-  background:linear-gradient(135deg,rgba(30,20,0,.8),rgba(20,14,0,.85));
-  border:1px solid var(--gold-border);
-  border-radius:22px;padding:6px 12px 6px 10px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:10px;padding:6px 12px 6px 10px;
   display:flex;align-items:center;gap:8px;
-  color:var(--gold);font-size:13px;font-weight:700;
-  box-shadow:0 0 12px var(--gold-glow),inset 0 1px 0 rgba(255,220,80,.15);
+  color:var(--gold-l);font-size:13px;font-weight:700;
 }
-.balance .icon{font-size:16px}
+.balance .icon{font-size:14px}
 .balance .plus-btn{
-  width:20px;height:20px;
-  background:linear-gradient(135deg,#FFD700,#FF8C00);
-  color:#000;border-radius:50%;
+  width:18px;height:18px;background:var(--gold);color:#000;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  font-size:15px;font-weight:900;cursor:pointer;line-height:1;
-  box-shadow:0 2px 6px rgba(255,180,0,.5);
+  font-size:13px;font-weight:900;cursor:pointer;line-height:1;
 }
 .topnav{display:flex;gap:12px}
 .topnav span{
-  color:rgba(255,255,255,.5);font-size:11px;cursor:pointer;padding:4px 0;
+  color:var(--text3);font-size:11px;cursor:pointer;padding:4px 0;
   letter-spacing:.5px;text-transform:uppercase;
 }
-.topnav span:active{color:var(--gold)}
+.topnav span:active{color:var(--text)}
 
 /* ── GAME FIELD ── */
 .field{
-  position:relative;width:100%;height:360px;margin-top:6px;
+  position:relative;width:100%;height:360px;margin-top:4px;
 }
 .grass{
-  position:absolute;bottom:0;width:100%;height:160px;
-  background:linear-gradient(180deg,var(--grass1) 0%,var(--grass2) 50%,var(--grass3) 100%);
+  position:absolute;bottom:0;width:100%;height:180px;
+  background:repeating-linear-gradient(
+    180deg,
+    var(--grass-a) 0px,var(--grass-a) 24px,
+    var(--grass-b) 24px,var(--grass-b) 48px
+  );
+}
+.grass::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,rgba(0,0,0,.08) 55%,transparent 100%);
+  pointer-events:none;
 }
 .grass-stripes{
   position:absolute;inset:0;
-  background:repeating-linear-gradient(0deg,
-    rgba(0,0,0,.12) 0,rgba(0,0,0,.12) 1px,
-    transparent 1px,transparent 28px),
-  repeating-linear-gradient(90deg,
-    rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,
+  background:repeating-linear-gradient(90deg,
+    rgba(255,255,255,.02) 0,rgba(255,255,255,.02) 1px,
     transparent 1px,transparent 46px);
 }
 .penalty-arc{
   position:absolute;bottom:0;left:50%;transform:translateX(-50%);
   width:200px;height:80px;
-  border:1.5px solid rgba(255,255,255,.25);border-bottom:none;
+  border:1.5px solid rgba(255,255,255,.3);border-bottom:none;
   border-radius:100px 100px 0 0;
 }
 .center-line{
@@ -235,8 +225,7 @@ body{
 .gk.catch-r{animation:gkCatchR .42s cubic-bezier(.15,1.3,.4,1) forwards}
 .gk.catch-c{animation:gkCatchC .42s cubic-bezier(.15,1.3,.4,1) forwards}
 .gk.catch-l .gk-torso,.gk.catch-r .gk-torso,.gk.catch-c .gk-torso{
-  background:linear-gradient(160deg,#00C853,#009440);
-  box-shadow:0 0 14px rgba(0,200,83,.8);
+  fill:#1DB954 !important;
 }
 
 /* ── DEFLECT: full-stretch horizontal dive (no scaleY) ── */
@@ -251,8 +240,7 @@ body{
 .gk.deflect-l{animation:gkDeflectL .48s ease-out forwards}
 .gk.deflect-r{animation:gkDeflectR .48s ease-out forwards}
 .gk.deflect-l .gk-torso,.gk.deflect-r .gk-torso{
-  background:linear-gradient(160deg,#FFD700,#FF8C00);
-  box-shadow:0 0 16px rgba(255,180,0,.9);
+  fill:#F5A623 !important;
 }
 
 /* ── MISS: clean fast wrong-direction dive (same speed as save) ── */
@@ -272,8 +260,7 @@ body{
 .gk.miss-r{animation:gkMissR .45s ease-out forwards}
 .gk.miss-c{animation:gkMissC .45s ease-out forwards}
 .gk.miss-l .gk-torso,.gk.miss-r .gk-torso,.gk.miss-c .gk-torso{
-  background:linear-gradient(160deg,#888,#555);
-  box-shadow:0 0 10px rgba(200,50,50,.5);
+  fill:#666 !important;
 }
 
 /* Legacy (bet scene idle dives) */
@@ -334,218 +321,182 @@ body{
 .grid-overlay{
   position:absolute;top:8px;left:8px;right:8px;bottom:0;
   display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(3,1fr);
-  gap:6px;padding:10px 8px;z-index:8;
+  gap:5px;padding:8px 6px;z-index:8;
 }
 .cell{
-  border-radius:10px;
-  border:1.5px solid rgba(255,200,60,.2);
-  background:linear-gradient(135deg,rgba(20,25,60,.7),rgba(10,12,35,.8));
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);
   display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:800;color:rgba(255,220,100,.7);
-  cursor:pointer;transition:.15s;position:relative;
-  backdrop-filter:blur(4px);
-  box-shadow:inset 0 1px 0 rgba(255,220,80,.08);
+  font-size:12px;font-weight:700;color:rgba(255,255,255,.5);
+  cursor:pointer;transition:.12s;position:relative;
 }
 .cell:hover,.cell.hover{
-  background:linear-gradient(135deg,rgba(40,50,120,.8),rgba(20,25,80,.9));
-  border-color:rgba(255,200,60,.5);
-  color:#FFD87A;transform:scale(1.06);
-  box-shadow:0 0 12px rgba(255,200,0,.2),inset 0 1px 0 rgba(255,220,80,.15);
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.25);
+  color:#fff;transform:scale(1.05);
 }
 .cell:active,.cell.selected{
-  background:linear-gradient(135deg,rgba(60,45,0,.8),rgba(40,30,0,.9));
-  border-color:var(--gold);color:var(--gold);
-  box-shadow:0 0 18px rgba(255,200,0,.5),inset 0 1px 0 rgba(255,220,80,.2);
-  transform:scale(1.1);
+  background:rgba(201,162,39,.18);
+  border-color:var(--gold);color:var(--gold-l);
+  transform:scale(1.08);
 }
 .cell.hot{
-  background:linear-gradient(135deg,rgba(80,30,0,.7),rgba(60,20,0,.8));
-  border-color:rgba(255,140,0,.6);
-  color:#FFB74D;
-  box-shadow:0 0 10px rgba(255,120,0,.2);
+  background:rgba(200,120,0,.12);border-color:rgba(220,140,0,.35);
+  color:#E8A030;
 }
 .cell.jackpot{
-  background:linear-gradient(135deg,rgba(60,50,0,.8),rgba(40,35,0,.9));
-  border-color:rgba(255,200,0,.7);
-  color:var(--gold);
-  box-shadow:0 0 14px rgba(255,200,0,.35);
+  background:rgba(201,162,39,.12);border-color:rgba(201,162,39,.45);
+  color:var(--gold-l);
 }
-.cell-multi{font-size:12px;font-weight:900}
+.cell-multi{font-size:11px;font-weight:800}
 
 /* ── BET MIDDLE SECTION ── */
 .bet-middle{
-  position:relative;padding:16px 16px 0;z-index:5;overflow:hidden;
+  position:relative;padding:14px 16px 0;z-index:5;overflow:hidden;
 }
 .bp-canvas{
   position:absolute;inset:0;pointer-events:none;overflow:hidden;
 }
 .bp{
   position:absolute;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,200,80,.2),transparent 70%);
+  background:radial-gradient(circle,rgba(255,255,255,.1),transparent 70%);
   animation:bpFloat var(--dur,4s) ease-in-out infinite;
   animation-delay:var(--d,0s);
 }
 @keyframes bpFloat{
   0%  {transform:translate(0,0) scale(1);opacity:0}
-  25% {opacity:.8}
-  75% {opacity:.4}
+  25% {opacity:.6}
+  75% {opacity:.3}
   100%{transform:translate(var(--tx,0px),-90px) scale(.2);opacity:0}
 }
 .history-wrap{
-  display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:14px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:12px;
 }
 .history-title{
-  color:rgba(255,200,60,.5);font-size:9px;letter-spacing:3px;
-  text-transform:uppercase;
+  color:var(--text3);font-size:9px;letter-spacing:3px;text-transform:uppercase;
 }
-.history-dots{display:flex;gap:6px;align-items:center}
+.history-dots{display:flex;gap:5px;align-items:center}
 .h-dot{
-  width:28px;height:28px;border-radius:8px;
+  width:26px;height:26px;border-radius:6px;
   display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:900;transition:.2s;
+  font-size:11px;font-weight:700;transition:.15s;
 }
 .h-dot.goal{
-  background:linear-gradient(135deg,rgba(0,180,70,.2),rgba(0,150,55,.15));
-  border:1.5px solid rgba(0,200,83,.5);
-  color:#00E676;box-shadow:0 0 8px rgba(0,200,83,.2);
+  background:rgba(47,168,79,.12);border:1px solid rgba(47,168,79,.35);
+  color:var(--success);
 }
 .h-dot.block{
-  background:linear-gradient(135deg,rgba(200,50,30,.15),rgba(160,40,20,.12));
-  border:1.5px solid rgba(255,87,34,.4);
-  color:#FF7043;
+  background:rgba(201,64,64,.1);border:1px solid rgba(201,64,64,.3);
+  color:var(--danger);
 }
 .stats-row{display:flex;gap:8px}
 .stat-card{
-  flex:1;
-  background:linear-gradient(135deg,rgba(10,14,35,.85),rgba(7,9,22,.9));
-  border:1px solid rgba(255,200,60,.15);
-  border-radius:12px;padding:10px 6px;text-align:center;
-  backdrop-filter:blur(6px);
-  box-shadow:inset 0 1px 0 rgba(255,220,80,.05);
+  flex:1;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:10px 6px;text-align:center;
 }
 .hot-card{
-  background:linear-gradient(135deg,rgba(40,28,0,.85),rgba(30,20,0,.9));
-  border-color:rgba(255,200,0,.3);
-  box-shadow:0 0 12px rgba(255,180,0,.08),inset 0 1px 0 rgba(255,220,80,.08);
+  border-color:rgba(201,162,39,.2);
 }
-.stat-val{color:#fff;font-size:19px;font-weight:900;margin-bottom:3px}
-.stat-val.gold{color:var(--gold);text-shadow:0 0 10px rgba(255,200,0,.4)}
-.stat-lbl{color:rgba(255,200,60,.45);font-size:9px;letter-spacing:.8px;text-transform:uppercase}
+.stat-val{color:var(--text);font-size:18px;font-weight:800;margin-bottom:3px}
+.stat-val.gold{color:var(--gold-l)}
+.stat-lbl{color:var(--text3);font-size:9px;letter-spacing:.8px;text-transform:uppercase}
 
 /* ── BET CONTROLS ── */
 .bet-panel{
   position:absolute;bottom:0;width:100%;z-index:15;
-  background:linear-gradient(180deg,transparent,rgba(4,5,14,.97) 20%,rgba(3,4,12,1) 100%);
-  padding:18px 16px 34px;
+  background:linear-gradient(180deg,transparent,var(--bg) 22%);
+  padding:16px 16px 32px;
 }
 .bet-amount-row{
   display:flex;align-items:center;justify-content:space-between;
-  background:linear-gradient(135deg,rgba(12,16,40,.9),rgba(8,10,26,.95));
-  border:1px solid rgba(255,200,60,.2);
-  border-radius:14px;padding:12px 16px;margin-bottom:10px;
-  box-shadow:inset 0 1px 0 rgba(255,220,80,.06),0 2px 12px rgba(0,0,0,.4);
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:10px;padding:12px 16px;margin-bottom:10px;
 }
-.bet-label{color:rgba(255,200,60,.5);font-size:11px;letter-spacing:.8px;text-transform:uppercase}
-.bet-value{color:#fff;font-size:20px;font-weight:800;letter-spacing:.5px;text-shadow:0 0 10px rgba(255,255,255,.2)}
+.bet-label{color:var(--text3);font-size:10px;letter-spacing:.8px;text-transform:uppercase}
+.bet-value{color:var(--text);font-size:20px;font-weight:700;letter-spacing:.5px}
 .bet-btns{display:flex;gap:6px}
 .bet-adj{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,rgba(255,200,60,.12),rgba(255,180,0,.06));
-  border:1px solid rgba(255,200,60,.3);
-  color:var(--gold);font-size:18px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:.15s;
-  box-shadow:0 0 8px rgba(255,180,0,.1);
+  width:30px;height:30px;border-radius:50%;
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text);font-size:16px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.12s;
 }
-.bet-adj:active{background:rgba(255,200,60,.2);transform:scale(.92)}
+.bet-adj:active{opacity:.7;transform:scale(.9)}
 
-.quick-bets{display:flex;gap:6px;margin-bottom:12px}
+.quick-bets{display:flex;gap:6px;margin-bottom:10px}
 .qbet{
-  flex:1;padding:8px 0;border-radius:10px;
-  background:linear-gradient(135deg,rgba(12,16,38,.8),rgba(8,10,26,.9));
-  border:1px solid rgba(255,200,60,.15);
-  color:rgba(255,200,60,.6);font-size:12px;font-weight:700;
-  text-align:center;cursor:pointer;transition:.15s;letter-spacing:.3px;
+  flex:1;padding:8px 0;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text2);font-size:12px;font-weight:600;
+  text-align:center;cursor:pointer;transition:.12s;
 }
 .qbet:active,.qbet.active{
-  background:linear-gradient(135deg,rgba(50,38,0,.8),rgba(35,26,0,.9));
-  border-color:rgba(255,200,0,.5);color:var(--gold);
-  box-shadow:0 0 10px rgba(255,180,0,.15);
+  background:rgba(201,162,39,.12);border-color:rgba(201,162,39,.4);color:var(--gold-l);
 }
 
-.actions{display:flex;gap:10px}
+.actions{display:flex;gap:8px}
 .btn-confirm{
-  flex:1;padding:16px;border-radius:14px;
-  background:linear-gradient(135deg,#FFB800,#FF8200,#E06500);
-  color:#1A0800;font-size:16px;font-weight:900;text-align:center;
-  cursor:pointer;transition:.15s;letter-spacing:.8px;
-  box-shadow:0 4px 20px rgba(255,160,0,.4),0 1px 0 rgba(255,240,100,.3) inset;
-  text-shadow:0 1px 0 rgba(255,240,120,.4);
+  flex:1;padding:15px;border-radius:10px;
+  background:var(--gold);
+  color:#0A0800;font-size:15px;font-weight:800;text-align:center;
+  cursor:pointer;transition:.12s;letter-spacing:.5px;
 }
-.btn-confirm:active{transform:scale(.97);box-shadow:0 2px 10px rgba(255,160,0,.3)}
+.btn-confirm:active{transform:scale(.97);opacity:.9}
 .btn-auto{
-  width:80px;padding:16px 0;border-radius:14px;
-  background:linear-gradient(135deg,rgba(12,16,40,.9),rgba(8,10,28,.95));
-  border:1px solid rgba(255,200,60,.25);
-  color:rgba(255,200,60,.6);font-size:12px;font-weight:700;text-align:center;
-  cursor:pointer;transition:.15s;letter-spacing:.3px;
+  width:78px;padding:15px 0;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border2);
+  color:var(--text2);font-size:12px;font-weight:600;text-align:center;
+  cursor:pointer;transition:.12s;
 }
-.btn-auto:active{background:rgba(255,200,60,.1)}
+.btn-auto:active{opacity:.7}
 .btn-auto.on{
-  background:linear-gradient(135deg,rgba(50,38,0,.8),rgba(35,26,0,.9));
-  border-color:rgba(255,200,0,.5);color:var(--gold);
-  box-shadow:0 0 10px rgba(255,180,0,.15);
+  background:rgba(201,162,39,.1);border-color:rgba(201,162,39,.4);color:var(--gold-l);
 }
 
 /* ── SHOOT SCENE ── */
 .shoot-hint{
   position:absolute;bottom:84px;left:50%;transform:translateX(-50%);
-  color:rgba(255,220,80,.9);font-size:13px;white-space:nowrap;z-index:15;
+  color:rgba(255,255,255,.6);font-size:12px;white-space:nowrap;z-index:15;
   animation:pulse 1.5s ease-in-out infinite;transition:opacity .2s;
-  text-shadow:0 0 12px rgba(255,200,0,.4),0 1px 4px rgba(0,0,0,.8);
   letter-spacing:.5px;
 }
 .cell.aimed{
-  background:linear-gradient(135deg,rgba(80,60,0,.8),rgba(60,45,0,.9)) !important;
-  border-color:#FFD700 !important;
-  color:#FFD700 !important;
-  transform:scale(1.12) !important;
-  box-shadow:0 0 22px rgba(255,215,0,.6),inset 0 1px 0 rgba(255,240,100,.2) !important;
+  background:rgba(201,162,39,.2) !important;
+  border-color:var(--gold-l) !important;
+  color:var(--gold-l) !important;
+  transform:scale(1.1) !important;
 }
-@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
 
 .shoot-bet-display{
   position:absolute;bottom:52px;left:50%;transform:translateX(-50%);
-  color:var(--gold);font-size:18px;font-weight:800;z-index:15;
-  text-shadow:0 0 14px rgba(255,200,0,.5),0 2px 8px rgba(0,0,0,.7);
+  color:var(--gold-l);font-size:17px;font-weight:700;z-index:15;
 }
 
 /* ── INLINE RESULT PANEL (slides up inside shoot scene) ── */
 .shoot-result-panel{
   position:absolute;bottom:0;left:0;right:0;z-index:35;
-  padding:24px 24px 44px;text-align:center;
-  background:linear-gradient(180deg,transparent,rgba(3,4,12,.94) 22%,rgba(3,4,12,.99) 100%);
+  padding:24px 24px 40px;text-align:center;
+  background:linear-gradient(180deg,transparent,var(--bg) 22%);
   transform:translateY(100%);
   transition:transform .42s cubic-bezier(.34,.9,.64,1);
-  border-top:1px solid rgba(255,200,60,.1);
+  border-top:1px solid var(--border);
 }
 .shoot-result-panel.open{transform:translateY(0)}
-.srp-label{color:rgba(255,200,60,.5);font-size:12px;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
-.srp-amount{font-size:32px;font-weight:900;letter-spacing:.5px;margin-bottom:16px}
-.srp-amount.win{color:var(--gold);text-shadow:0 0 20px rgba(255,200,0,.5)}
-.srp-amount.lose{color:rgba(255,255,255,.7)}
+.srp-label{color:var(--text2);font-size:11px;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.srp-amount{font-size:30px;font-weight:800;letter-spacing:.5px;margin-bottom:16px}
+.srp-amount.win{color:var(--gold-l)}
+.srp-amount.lose{color:var(--text2)}
 .srp-btn{
-  display:inline-block;padding:16px 56px;border-radius:14px;
-  font-size:16px;font-weight:900;cursor:pointer;transition:.15s;letter-spacing:.8px;
+  display:inline-block;padding:14px 52px;border-radius:10px;
+  font-size:15px;font-weight:700;cursor:pointer;transition:.12s;letter-spacing:.5px;
 }
 .srp-btn.win-btn{
-  background:linear-gradient(135deg,#FFB800,#FF8200,#E06500);
-  color:#1A0800;
-  box-shadow:0 4px 24px rgba(255,160,0,.4),inset 0 1px 0 rgba(255,240,100,.3);
+  background:var(--gold);color:#0A0800;
 }
 .srp-btn.lose-btn{
-  background:linear-gradient(135deg,rgba(15,18,45,.9),rgba(10,12,30,.95));
-  border:1px solid rgba(255,200,60,.3);color:rgba(255,200,60,.8);
-  box-shadow:0 0 12px rgba(255,180,0,.08);
+  background:var(--surface2);border:1px solid var(--border2);color:var(--text);
 }
 
 /* ── SHOOT REACTION ── */
@@ -607,31 +558,27 @@ body{
   position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
   z-index:20;text-align:center;
 }
-.result-label{color:rgba(255,200,60,.5);font-size:12px;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase}
-.result-amount{color:var(--gold);font-size:22px;font-weight:900;text-shadow:0 0 14px rgba(255,200,0,.4)}
+.result-label{color:var(--text2);font-size:11px;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase}
+.result-amount{color:var(--gold-l);font-size:22px;font-weight:700}
 .btn-retry{
-  margin-top:14px;padding:14px 40px;border-radius:14px;
-  background:linear-gradient(135deg,rgba(15,18,45,.9),rgba(10,12,30,.95));
-  border:1px solid rgba(255,200,60,.3);
-  color:rgba(255,200,60,.85);font-size:14px;font-weight:700;cursor:pointer;
-  display:inline-block;transition:.15s;letter-spacing:.5px;
-  box-shadow:0 0 12px rgba(255,180,0,.08);
+  margin-top:14px;padding:13px 38px;border-radius:10px;
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text);font-size:14px;font-weight:600;cursor:pointer;
+  display:inline-block;transition:.12s;
 }
-.btn-retry:active{background:rgba(255,200,60,.12);transform:scale(.97)}
+.btn-retry:active{opacity:.7}
 
 /* ── WIN SCENE ── */
 .win-scene{
   position:absolute;inset:0;z-index:40;
-  background:
-    radial-gradient(ellipse 500px 300px at 50% 20%,rgba(80,60,0,.25) 0%,transparent 70%),
-    linear-gradient(180deg,#06080F 0%,#080B1A 100%);
+  background:var(--bg);
   display:flex;flex-direction:column;align-items:center;
 }
 /* Win crowd */
 .win-crowd{
   width:100%;height:180px;position:relative;overflow:hidden;flex-shrink:0;
-  background:linear-gradient(180deg,rgba(10,15,40,.95),rgba(5,8,22,.9));
-  border-bottom:1px solid rgba(255,200,60,.1);
+  background:linear-gradient(180deg,#0A0B12,#070810);
+  border-bottom:1px solid var(--border);
 }
 .win-crowd-figures{
   position:absolute;bottom:0;left:0;right:0;height:100%;
@@ -683,43 +630,34 @@ body{
 }
 
 .win-amount-card{
-  background:linear-gradient(135deg,rgba(40,28,0,.88),rgba(28,18,0,.92));
-  border:1.5px solid rgba(255,200,60,.45);
-  border-radius:18px;padding:16px 40px;margin-top:8px;text-align:center;
-  box-shadow:0 0 40px rgba(255,180,0,.12),inset 0 1px 0 rgba(255,240,80,.08);
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:14px;padding:16px 40px;margin-top:8px;text-align:center;
 }
-.win-label{color:rgba(255,200,60,.55);font-size:11px;margin-bottom:4px;letter-spacing:1.5px;text-transform:uppercase}
+.win-label{color:var(--text2);font-size:11px;margin-bottom:4px;letter-spacing:1.5px;text-transform:uppercase}
 .win-amount{
-  color:var(--gold);font-size:38px;font-weight:900;letter-spacing:.5px;
+  color:var(--gold-l);font-size:38px;font-weight:800;letter-spacing:.5px;
   animation:countUp .8s ease-out;
-  text-shadow:0 0 20px rgba(255,200,0,.5);
 }
 @keyframes countUp{
-  0%{transform:scale(.8) translateY(10px);opacity:0}
+  0%{transform:scale(.85) translateY(8px);opacity:0}
   100%{transform:scale(1) translateY(0);opacity:1}
 }
 
 .win-multiplier{
-  background:linear-gradient(135deg,rgba(50,20,0,.7),rgba(40,15,0,.8));
-  border:1px solid rgba(255,100,50,.4);
-  border-radius:10px;padding:4px 14px;margin-top:8px;
-  color:#FF8A65;font-size:13px;font-weight:700;
-  box-shadow:0 0 10px rgba(255,80,30,.1);
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:4px 14px;margin-top:8px;
+  color:var(--text2);font-size:12px;font-weight:600;
 }
 
 .btn-play-again{
-  margin-top:20px;padding:18px 60px;border-radius:16px;
-  background:linear-gradient(135deg,#FFB800,#FF8200,#E06500);
-  color:#1A0800;font-size:17px;font-weight:900;cursor:pointer;
-  box-shadow:0 4px 30px rgba(255,160,0,.45),inset 0 1px 0 rgba(255,240,100,.3);
-  animation:playAgainPulse 2s ease-in-out infinite;
-  letter-spacing:.8px;text-shadow:0 1px 0 rgba(255,240,120,.3);
+  margin-top:20px;padding:16px 56px;border-radius:10px;
+  background:var(--gold);color:#0A0800;font-size:16px;font-weight:800;cursor:pointer;
+  letter-spacing:.5px;
 }
 @keyframes playAgainPulse{
-  0%,100%{box-shadow:0 4px 30px rgba(255,160,0,.45),inset 0 1px 0 rgba(255,240,100,.3)}
-  50%{box-shadow:0 6px 50px rgba(255,160,0,.7),0 0 80px rgba(255,140,0,.2),inset 0 1px 0 rgba(255,240,100,.3)}
+  0%,100%{opacity:1}50%{opacity:.9}
 }
-.btn-play-again:active{transform:scale(.96)}
+.btn-play-again:active{transform:scale(.96);opacity:.85}
 
 /* Confetti canvas */
 #confetti{position:absolute;inset:0;pointer-events:none;z-index:50}
@@ -747,61 +685,47 @@ body{
 /* ── LOADING BAR ── */
 .intro-screen{
   position:absolute;inset:0;z-index:100;
-  background:
-    radial-gradient(ellipse 500px 400px at 50% 40%,rgba(30,20,0,.5) 0%,transparent 70%),
-    linear-gradient(180deg,#030509,#060A18,#040610);
+  background:var(--bg);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
 }
 .intro-logo{
-  font-size:80px;
-  filter:drop-shadow(0 0 30px rgba(255,180,0,.6)) drop-shadow(0 0 60px rgba(255,140,0,.3));
-  animation:logoBounce 1s cubic-bezier(.34,1.56,.64,1);
+  font-size:72px;
+  animation:logoBounce .8s cubic-bezier(.34,1.56,.64,1);
 }
 @keyframes logoBounce{
   0%{transform:scale(0);opacity:0}
   100%{transform:scale(1);opacity:1}
 }
 .intro-title{
-  font-size:30px;font-weight:900;color:transparent;
-  background:linear-gradient(135deg,#FFE566,#FFB300,#FF8C00);
-  -webkit-background-clip:text;background-clip:text;
-  letter-spacing:4px;
-  filter:drop-shadow(0 0 20px rgba(255,180,0,.4));
+  font-size:28px;font-weight:800;color:var(--text);
+  letter-spacing:3px;
 }
 .intro-sub{
-  color:rgba(255,200,60,.45);font-size:11px;letter-spacing:5px;text-transform:uppercase;
+  color:var(--text3);font-size:11px;letter-spacing:4px;text-transform:uppercase;
 }
 .load-bar-wrap{
-  width:220px;height:3px;
-  background:rgba(255,200,60,.1);
-  border-radius:2px;overflow:hidden;
-  border:1px solid rgba(255,200,60,.15);
+  width:200px;height:2px;background:var(--surface2);border-radius:1px;overflow:hidden;
 }
 .load-bar{
-  height:100%;
-  background:linear-gradient(90deg,#FF8C00,#FFD700,#FFB300);
-  border-radius:2px;width:0;transition:width .05s;
-  box-shadow:0 0 8px rgba(255,180,0,.6);
+  height:100%;background:var(--gold);border-radius:1px;width:0;transition:width .05s;
 }
 .intro-tap{
-  color:rgba(255,200,60,.65);font-size:14px;letter-spacing:2px;
+  color:var(--text2);font-size:13px;letter-spacing:2px;
   animation:pulse 1.5s ease-in-out infinite;
   cursor:pointer;text-transform:uppercase;
 }
 
 /* ── ODDS TICKER ── */
 .odds-row{
-  display:flex;gap:6px;padding:6px 16px;overflow:hidden;
+  display:flex;gap:6px;padding:5px 16px;overflow:hidden;
   position:absolute;top:56px;left:0;right:0;z-index:12;
 }
 .odds-chip{
-  flex-shrink:0;
-  background:linear-gradient(135deg,rgba(12,15,35,.85),rgba(8,10,24,.9));
-  border:1px solid rgba(255,200,60,.18);
-  border-radius:8px;padding:4px 10px;font-size:10px;color:rgba(255,200,60,.5);
-  white-space:nowrap;letter-spacing:.3px;
+  flex-shrink:0;background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;padding:3px 8px;font-size:10px;color:var(--text3);
+  white-space:nowrap;
 }
-.odds-chip span{color:#FFD060;font-weight:700;margin-left:4px;text-shadow:0 0 6px rgba(255,200,0,.3)}
+.odds-chip span{color:var(--gold-l);font-weight:700;margin-left:4px}
 
 /* ── RESPONSIVE ── */
 @media(max-width:390px){
@@ -864,26 +788,22 @@ body{
 
       <!-- Goalkeeper -->
       <div class="gk" id="gk">
-        <div class="gk-body">
-          <div class="gk-head"></div>
-          <div class="gk-torso">
-            <div class="gk-arms">
-              <div style="display:flex;flex-direction:column;align-items:center">
-                <div class="gk-arm l"></div>
-                <div class="gk-glove"></div>
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:center">
-                <div class="gk-arm r"></div>
-                <div class="gk-glove"></div>
-              </div>
-            </div>
-          </div>
-          <div class="gk-shorts"></div>
-          <div class="gk-legs">
-            <div class="gk-leg"></div>
-            <div class="gk-leg"></div>
-          </div>
-        </div>
+        <svg width="54" height="90" viewBox="0 0 54 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="27" cy="9" r="8" fill="#EDBA8C"/>
+          <path d="M19 6 Q27 0.5 35 6 Q35 3.5 27 2.5 Q19 3.5 19 6Z" fill="#5A3218"/>
+          <rect x="24" y="16" width="6" height="5" fill="#EDBA8C"/>
+          <path class="gk-torso" d="M13 21 L5 34 L12 38.5 L19 25 L35 25 L42 38.5 L49 34 L41 21 Q34 17.5 27 18 Q20 17.5 13 21Z" fill="#1A9142"/>
+          <path class="gk-torso" d="M19 25 L17 45 L37 45 L35 25Z" fill="#1A9142"/>
+          <ellipse cx="6.5" cy="36.5" rx="5.5" ry="4.5" fill="#D46A00"/>
+          <ellipse cx="47.5" cy="36.5" rx="5.5" ry="4.5" fill="#D46A00"/>
+          <path d="M17 45 L15.5 58 L24 58 L27 50.5 L30 58 L38.5 58 L37 45Z" fill="#18183A"/>
+          <path d="M15.5 58 L13.5 73 L23 73 L24 58.5Z" fill="#EDBA8C"/>
+          <path d="M30 58.5 L31 73 L40.5 73 L38.5 58Z" fill="#EDBA8C"/>
+          <rect x="13.5" y="71" width="9.5" height="9" rx="1" fill="#EEEEEE"/>
+          <rect x="31" y="71" width="9.5" height="9" rx="1" fill="#EEEEEE"/>
+          <path d="M11.5 78 L11.5 86 L26 86 L26 80 Z" fill="#141414"/>
+          <path d="M28 80 L28 86 L42.5 86 L42.5 78 Z" fill="#141414"/>
+        </svg>
       </div>
 
       <!-- Ball -->
@@ -985,21 +905,22 @@ body{
 
       <!-- Goalkeeper in shoot scene -->
       <div class="gk" id="gk3" style="bottom:420px">
-        <div class="gk-body">
-          <div class="gk-head"></div>
-          <div class="gk-torso">
-            <div class="gk-arms">
-              <div style="display:flex;flex-direction:column;align-items:center">
-                <div class="gk-arm l"></div><div class="gk-glove"></div>
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:center">
-                <div class="gk-arm r"></div><div class="gk-glove"></div>
-              </div>
-            </div>
-          </div>
-          <div class="gk-shorts"></div>
-          <div class="gk-legs"><div class="gk-leg"></div><div class="gk-leg"></div></div>
-        </div>
+        <svg width="54" height="90" viewBox="0 0 54 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="27" cy="9" r="8" fill="#EDBA8C"/>
+          <path d="M19 6 Q27 0.5 35 6 Q35 3.5 27 2.5 Q19 3.5 19 6Z" fill="#5A3218"/>
+          <rect x="24" y="16" width="6" height="5" fill="#EDBA8C"/>
+          <path class="gk-torso" d="M13 21 L5 34 L12 38.5 L19 25 L35 25 L42 38.5 L49 34 L41 21 Q34 17.5 27 18 Q20 17.5 13 21Z" fill="#1A9142"/>
+          <path class="gk-torso" d="M19 25 L17 45 L37 45 L35 25Z" fill="#1A9142"/>
+          <ellipse cx="6.5" cy="36.5" rx="5.5" ry="4.5" fill="#D46A00"/>
+          <ellipse cx="47.5" cy="36.5" rx="5.5" ry="4.5" fill="#D46A00"/>
+          <path d="M17 45 L15.5 58 L24 58 L27 50.5 L30 58 L38.5 58 L37 45Z" fill="#18183A"/>
+          <path d="M15.5 58 L13.5 73 L23 73 L24 58.5Z" fill="#EDBA8C"/>
+          <path d="M30 58.5 L31 73 L40.5 73 L38.5 58Z" fill="#EDBA8C"/>
+          <rect x="13.5" y="71" width="9.5" height="9" rx="1" fill="#EEEEEE"/>
+          <rect x="31" y="71" width="9.5" height="9" rx="1" fill="#EEEEEE"/>
+          <path d="M11.5 78 L11.5 86 L26 86 L26 80 Z" fill="#141414"/>
+          <path d="M28 80 L28 86 L42.5 86 L42.5 78 Z" fill="#141414"/>
+        </svg>
       </div>
 
       <!-- Ball (bigger + charge ring) -->
@@ -1066,21 +987,22 @@ body{
       </div>
 
       <div class="gk" id="gk2">
-        <div class="gk-body">
-          <div class="gk-head"></div>
-          <div class="gk-torso">
-            <div class="gk-arms">
-              <div style="display:flex;flex-direction:column;align-items:center">
-                <div class="gk-arm l"></div><div class="gk-glove"></div>
-              </div>
-              <div style="display:flex;flex-direction:column;align-items:center">
-                <div class="gk-arm r"></div><div class="gk-glove"></div>
-              </div>
-            </div>
-          </div>
-          <div class="gk-shorts"></div>
-          <div class="gk-legs"><div class="gk-leg"></div><div class="gk-leg"></div></div>
-        </div>
+        <svg width="54" height="90" viewBox="0 0 54 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="27" cy="9" r="8" fill="#EDBA8C"/>
+          <path d="M19 6 Q27 0.5 35 6 Q35 3.5 27 2.5 Q19 3.5 19 6Z" fill="#5A3218"/>
+          <rect x="24" y="16" width="6" height="5" fill="#EDBA8C"/>
+          <path class="gk-torso" d="M13 21 L5 34 L12 38.5 L19 25 L35 25 L42 38.5 L49 34 L41 21 Q34 17.5 27 18 Q20 17.5 13 21Z" fill="#1A9142"/>
+          <path class="gk-torso" d="M19 25 L17 45 L37 45 L35 25Z" fill="#1A9142"/>
+          <ellipse cx="6.5" cy="36.5" rx="5.5" ry="4.5" fill="#D46A00"/>
+          <ellipse cx="47.5" cy="36.5" rx="5.5" ry="4.5" fill="#D46A00"/>
+          <path d="M17 45 L15.5 58 L24 58 L27 50.5 L30 58 L38.5 58 L37 45Z" fill="#18183A"/>
+          <path d="M15.5 58 L13.5 73 L23 73 L24 58.5Z" fill="#EDBA8C"/>
+          <path d="M30 58.5 L31 73 L40.5 73 L38.5 58Z" fill="#EDBA8C"/>
+          <rect x="13.5" y="71" width="9.5" height="9" rx="1" fill="#EEEEEE"/>
+          <rect x="31" y="71" width="9.5" height="9" rx="1" fill="#EEEEEE"/>
+          <path d="M11.5 78 L11.5 86 L26 86 L26 80 Z" fill="#141414"/>
+          <path d="M28 80 L28 86 L42.5 86 L42.5 78 Z" fill="#141414"/>
+        </svg>
       </div>
     </div>
 

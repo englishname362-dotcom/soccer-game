@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>⚽ 点球对决</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+:root{
+  --gold:#FFD700;--gold2:#FFA500;--green:#00C853;--navy:#0A0E27;--dark:#060914;
+  --accent:#FF5722;--white:#fff;--glass:rgba(255,255,255,.08);--gb:rgba(255,255,255,.15);
+  --grass1:#1B6B30;--grass2:#145A26;--grass3:#0E4A1E;
+}
+body{background:#000;font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;
+  display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden}
+
+/* ── CONTAINER ── */
+#app{
+  width:390px;height:844px;background:var(--navy);position:relative;
+  overflow:hidden;border-radius:44px;
+  box-shadow:0 0 100px rgba(0,200,83,.15),0 0 300px rgba(0,0,0,.8),
+    inset 0 0 1px rgba(255,255,255,.1);
+}
+@media(max-height:860px){#app{border-radius:0;height:100vh;width:100vw;max-width:390px}}
+
+/* ── STADIUM BG ── */
+.stadium{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,#05091A 0%,#0D1B3E 30%,#081428 60%,#040C1A 100%);
+}
+.lights{
+  position:absolute;top:0;left:0;right:0;height:220px;
+  background:radial-gradient(ellipse 200px 120px at 15% 0%,rgba(255,240,180,.12) 0%,transparent 70%),
+    radial-gradient(ellipse 200px 120px at 85% 0%,rgba(255,240,180,.12) 0%,transparent 70%),
+    radial-gradient(ellipse 400px 200px at 50% -20%,rgba(80,160,255,.06) 0%,transparent 80%);
+}
+/* Seamless top overlay — nav bar blends into stadium */
+.stadium::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:120px;
+  background:linear-gradient(180deg,rgba(5,9,26,.55) 0%,transparent 100%);
+  pointer-events:none;
+}
+.crowd{
+  position:absolute;top:56px;left:0;right:0;height:55px;overflow:hidden;
+  background:transparent;
+}
+.crowd::before{content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='390' height='55'><g fill='rgba(255,255,255,0.07)'><ellipse cx='15' cy='45' rx='8' ry='12'/><ellipse cx='35' cy='42' rx='7' ry='11'/><ellipse cx='55' cy='44' rx='8' ry='13'/><ellipse cx='75' cy='41' rx='7' ry='12'/><ellipse cx='95' cy='43' rx='8' ry='11'/><ellipse cx='115' cy='44' rx='7' ry='13'/><ellipse cx='135' cy='42' rx='8' ry='12'/><ellipse cx='155' cy='45' rx='7' ry='11'/><ellipse cx='175' cy='43' rx='8' ry='12'/><ellipse cx='195' cy='44' rx='7' ry='13'/><ellipse cx='215' cy='42' rx='8' ry='11'/><ellipse cx='235' cy='45' rx='7' ry='12'/><ellipse cx='255' cy='43' rx='8' ry='13'/><ellipse cx='275' cy='41' rx='7' ry='11'/><ellipse cx='295' cy='44' rx='8' ry='12'/><ellipse cx='315' cy='42' rx='7' ry='13'/><ellipse cx='335' cy='45' rx='8' ry='11'/><ellipse cx='355' cy='43' rx='7' ry='12'/><ellipse cx='375' cy='44' rx='8' ry='13'/></g><g fill='rgba(255,255,255,0.05)'><ellipse cx='25' cy='35' rx='6' ry='10'/><ellipse cx='45' cy='32' rx='7' ry='11'/><ellipse cx='65' cy='34' rx='6' ry='10'/><ellipse cx='85' cy='31' rx='7' ry='11'/><ellipse cx='105' cy='33' rx='6' ry='10'/><ellipse cx='125' cy='34' rx='7' ry='12'/><ellipse cx='145' cy='32' rx='6' ry='10'/><ellipse cx='165' cy='35' rx='7' ry='11'/><ellipse cx='185' cy='33' rx='6' ry='10'/><ellipse cx='205' cy='34' rx='7' ry='11'/><ellipse cx='225' cy='32' rx='6' ry='12'/><ellipse cx='245' cy='35' rx='7' ry='10'/><ellipse cx='265' cy='33' rx='6' ry='11'/><ellipse cx='285' cy='31' rx='7' ry='10'/><ellipse cx='305' cy='34' rx='6' ry='11'/><ellipse cx='325' cy='32' rx='7' ry='12'/><ellipse cx='345' cy='35' rx='6' ry='10'/><ellipse cx='365' cy='33' rx='7' ry='11'/></g></svg>") no-repeat;
+}
+
+/* ── TOP BAR ── */
+.topbar{
+  position:relative;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px 0;height:56px;
+}
+.btn-exit{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:#fff;padding:6px 14px;border-radius:20px;font-size:13px;
+  cursor:pointer;transition:.2s;flex-shrink:0;
+}
+.btn-exit:active{opacity:.7}
+.balance{
+  background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,165,0,.1));
+  border:1px solid rgba(255,215,0,.4);border-radius:22px;
+  padding:6px 12px 6px 10px;display:flex;align-items:center;gap:8px;
+  color:var(--gold);font-size:13px;font-weight:700;
+}
+.balance .icon{font-size:16px}
+.balance .plus-btn{
+  width:20px;height:20px;background:var(--gold);color:#000;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;cursor:pointer;line-height:1;
+}
+.topnav{display:flex;gap:12px}
+.topnav span{color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;padding:4px 0}
+.topnav span:active{color:#fff}
+
+/* ── GAME FIELD ── */
+.field{
+  position:relative;width:100%;height:360px;margin-top:6px;
+}
+.grass{
+  position:absolute;bottom:0;width:100%;height:160px;
+  background:linear-gradient(180deg,var(--grass1) 0%,var(--grass2) 50%,var(--grass3) 100%);
+}
+.grass-stripes{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,
+    rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 1px,
+    transparent 1px,transparent 46px);
+}
+.penalty-arc{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:200px;height:80px;
+  border:1.5px solid rgba(255,255,255,.2);border-bottom:none;
+  border-radius:100px 100px 0 0;
+}
+.center-line{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:1.5px;height:160px;background:rgba(255,255,255,.1);
+}
+
+/* ── GOAL ── */
+.goal-wrap{
+  position:absolute;bottom:90px;left:50%;transform:translateX(-50%);
+  width:280px;height:160px;z-index:3;
+}
+/* Posts */
+.post-l,.post-r{
+  position:absolute;bottom:0;width:8px;border-radius:4px;
+  background:linear-gradient(90deg,#c8c8c8,#fff,#b0b0b0);
+  box-shadow:0 0 12px rgba(255,255,255,.4);
+}
+.post-l{left:0;height:165px}
+.post-r{right:0;height:165px}
+.crossbar{
+  position:absolute;top:0;left:0;right:0;height:8px;
+  background:linear-gradient(180deg,#c8c8c8,#fff,#b0b0b0);
+  border-radius:4px;box-shadow:0 0 12px rgba(255,255,255,.4);
+}
+/* Net */
+.net{
+  position:absolute;top:8px;left:8px;right:8px;bottom:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+  background-size:25px 22px;
+  background-color:rgba(0,0,30,.3);
+}
+/* Depth lines */
+.net::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.4) 100%),
+    linear-gradient(to right,rgba(0,0,0,.2) 0%,transparent 30%,transparent 70%,rgba(0,0,0,.2) 100%);
+}
+/* Ground shadow */
+.goal-shadow{
+  position:absolute;bottom:84px;left:50%;transform:translateX(-50%);
+  width:300px;height:20px;
+  background:radial-gradient(ellipse,rgba(0,0,0,.5) 0%,transparent 70%);
+  z-index:2;
+}
+
+/* ── GOALKEEPER ── */
+.gk{
+  position:absolute;bottom:90px;left:50%;
+  transform:translateX(-50%);
+  z-index:6;transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.gk-body{
+  width:36px;height:72px;position:relative;display:flex;flex-direction:column;align-items:center;
+}
+/* Head */
+.gk-head{
+  width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(135deg,#FFCD94,#E8A870);
+  border:2px solid rgba(255,255,255,.3);
+  position:relative;flex-shrink:0;
+}
+.gk-head::after{content:'';position:absolute;bottom:0;left:2px;right:2px;height:8px;
+  background:#5B3C11;border-radius:0 0 6px 6px}
+/* Jersey */
+.gk-torso{
+  width:28px;height:28px;
+  background:linear-gradient(160deg,#FF6B00,#E55000);
+  border-radius:4px 4px 6px 6px;margin-top:1px;
+  position:relative;
+}
+.gk-torso::before{content:'GK';position:absolute;top:6px;left:50%;transform:translateX(-50%);
+  font-size:7px;font-weight:900;color:rgba(255,255,255,.9);letter-spacing:0}
+/* Arms */
+.gk-arms{
+  position:absolute;top:24px;left:-10px;right:-10px;height:24px;
+  display:flex;justify-content:space-between;
+}
+.gk-arm{
+  width:10px;height:24px;background:linear-gradient(160deg,#FF6B00,#E55000);
+  border-radius:5px;
+}
+.gk-arm.l{transform:rotate(15deg);transform-origin:top center}
+.gk-arm.r{transform:rotate(-15deg);transform-origin:top center}
+/* Gloves */
+.gk-glove{
+  width:12px;height:10px;background:#1a5c00;border-radius:4px;margin-top:1px;
+}
+/* Shorts */
+.gk-shorts{
+  width:26px;height:14px;background:#222;border-radius:3px;margin-top:1px;
+}
+/* Legs */
+.gk-legs{display:flex;gap:6px;margin-top:1px}
+.gk-leg{
+  width:10px;height:20px;background:linear-gradient(160deg,#FFCD94,#E8A870);
+  border-radius:5px;
+}
+/* Socks/boots */
+.gk-leg::after{content:'';display:block;width:10px;height:7px;
+  background:#fff;border-radius:2px;margin-top:1px}
+
+/* GK never blocks clicks */
+.gk{pointer-events:none}
+
+/* ── CATCH: decisive dive to ball, upright, triumphant ── */
+@keyframes gkCatchL{
+  0%{transform:translateX(-50%)}
+  45%{transform:translateX(calc(-50% - 88px)) rotate(-18deg)}
+  100%{transform:translateX(calc(-50% - 85px)) rotate(-14deg)}
+}
+@keyframes gkCatchR{
+  0%{transform:translateX(-50%)}
+  45%{transform:translateX(calc(-50% + 88px)) rotate(18deg)}
+  100%{transform:translateX(calc(-50% + 85px)) rotate(14deg)}
+}
+@keyframes gkCatchC{
+  0%{transform:translateX(-50%)}
+  50%{transform:translateX(-50%) translateY(-42px)}
+  100%{transform:translateX(-50%) translateY(-36px)}
+}
+.gk.catch-l{animation:gkCatchL .42s cubic-bezier(.15,1.3,.4,1) forwards}
+.gk.catch-r{animation:gkCatchR .42s cubic-bezier(.15,1.3,.4,1) forwards}
+.gk.catch-c{animation:gkCatchC .42s cubic-bezier(.15,1.3,.4,1) forwards}
+.gk.catch-l .gk-torso,.gk.catch-r .gk-torso,.gk.catch-c .gk-torso{
+  background:linear-gradient(160deg,#00C853,#009440);
+  box-shadow:0 0 14px rgba(0,200,83,.8);
+}
+
+/* ── DEFLECT: full-stretch horizontal dive (no scaleY) ── */
+@keyframes gkDeflectL{
+  0%{transform:translateX(-50%) rotate(0)}
+  100%{transform:translateX(calc(-50% - 110px)) rotate(-72deg)}
+}
+@keyframes gkDeflectR{
+  0%{transform:translateX(-50%) rotate(0)}
+  100%{transform:translateX(calc(-50% + 110px)) rotate(72deg)}
+}
+.gk.deflect-l{animation:gkDeflectL .48s ease-out forwards}
+.gk.deflect-r{animation:gkDeflectR .48s ease-out forwards}
+.gk.deflect-l .gk-torso,.gk.deflect-r .gk-torso{
+  background:linear-gradient(160deg,#FFD700,#FF8C00);
+  box-shadow:0 0 16px rgba(255,180,0,.9);
+}
+
+/* ── MISS: clean fast wrong-direction dive (same speed as save) ── */
+@keyframes gkMissL{
+  0%{transform:translateX(-50%)}
+  100%{transform:translateX(calc(-50% - 88px)) rotate(-38deg)}
+}
+@keyframes gkMissR{
+  0%{transform:translateX(-50%)}
+  100%{transform:translateX(calc(-50% + 88px)) rotate(38deg)}
+}
+@keyframes gkMissC{
+  0%{transform:translateX(-50%)}
+  100%{transform:translateX(calc(-50% - 80px)) rotate(-32deg)}
+}
+.gk.miss-l{animation:gkMissL .45s ease-out forwards}
+.gk.miss-r{animation:gkMissR .45s ease-out forwards}
+.gk.miss-c{animation:gkMissC .45s ease-out forwards}
+.gk.miss-l .gk-torso,.gk.miss-r .gk-torso,.gk.miss-c .gk-torso{
+  background:linear-gradient(160deg,#888,#555);
+  box-shadow:0 0 10px rgba(200,50,50,.5);
+}
+
+/* Legacy (bet scene idle dives) */
+@keyframes gkDiveLeft{0%{transform:translateX(-50%)}100%{transform:translateX(calc(-50% - 80px)) rotate(-40deg)}}
+@keyframes gkDiveRight{0%{transform:translateX(-50%)}100%{transform:translateX(calc(-50% + 80px)) rotate(40deg)}}
+@keyframes gkJump{0%{transform:translateX(-50%)}50%{transform:translateX(-50%) translateY(-30px)}100%{transform:translateX(-50%) translateY(-10px)}}
+.gk.dive-left{animation:gkDiveLeft .5s ease-out forwards}
+.gk.dive-right{animation:gkDiveRight .5s ease-out forwards}
+.gk.jump{animation:gkJump .5s ease-out forwards}
+
+/* ── BALL ── */
+.ball-wrap{
+  position:absolute;z-index:10;
+  transition:none;
+}
+.ball{
+  width:50px;height:50px;
+  background:radial-gradient(circle at 35% 35%,#fff 0%,#e0e0e0 40%,#a0a0a0 100%);
+  border-radius:50%;
+  box-shadow:0 4px 15px rgba(0,0,0,.5),inset -3px -3px 8px rgba(0,0,0,.2);
+  position:relative;overflow:hidden;
+}
+.ball::before{content:'';position:absolute;
+  width:18px;height:18px;background:rgba(0,0,0,.7);
+  border-radius:50%;top:8px;left:16px;
+}
+.ball::after{content:'';position:absolute;
+  width:14px;height:14px;background:rgba(0,0,0,.7);
+  border-radius:50%;bottom:6px;left:6px;
+}
+.ball-patch{
+  position:absolute;width:12px;height:12px;
+  background:rgba(0,0,0,.7);border-radius:50%;
+  top:8px;right:8px;
+}
+.ball-shadow{
+  position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);
+  width:44px;height:10px;
+  background:radial-gradient(ellipse,rgba(0,0,0,.5) 0%,transparent 70%);
+}
+
+/* Ball rolling idle */
+@keyframes ballBounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
+}
+.ball-idle .ball{animation:ballBounce 1.5s ease-in-out infinite}
+
+/* Ball fly to target */
+@keyframes ballFly{
+  0%{transform:scale(1) rotate(0deg)}
+  50%{transform:scale(0.6) rotate(360deg)}
+  100%{transform:scale(0.4) rotate(720deg)}
+}
+.ball-flying .ball{animation:ballFly .6s ease-in forwards}
+
+/* ── MULTIPLIER GRID ── */
+.grid-overlay{
+  position:absolute;top:8px;left:8px;right:8px;bottom:0;
+  display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(3,1fr);
+  gap:6px;padding:10px 8px;z-index:8;
+}
+.cell{
+  border-radius:50%;border:2px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:rgba(255,255,255,.7);
+  cursor:pointer;transition:.15s;position:relative;
+  backdrop-filter:blur(2px);
+}
+.cell:hover,.cell.hover{
+  background:rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.6);
+  color:#fff;transform:scale(1.06);
+}
+.cell:active,.cell.selected{
+  background:rgba(255,200,0,.3);
+  border-color:var(--gold);color:var(--gold);
+  box-shadow:0 0 16px rgba(255,200,0,.4);
+  transform:scale(1.1);
+}
+.cell.hot{
+  background:rgba(255,100,0,.2);border-color:rgba(255,150,0,.6);
+  color:#FFB74D;
+}
+.cell.jackpot{
+  background:rgba(255,200,0,.15);border-color:rgba(255,200,0,.7);
+  color:var(--gold);
+}
+.cell-multi{font-size:12px;font-weight:900}
+
+/* ── BET MIDDLE SECTION ── */
+.bet-middle{
+  position:relative;padding:18px 20px 0;z-index:5;overflow:hidden;
+}
+.bp-canvas{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+.bp{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);
+  animation:bpFloat var(--dur,4s) ease-in-out infinite;
+  animation-delay:var(--d,0s);
+}
+@keyframes bpFloat{
+  0%  {transform:translate(0,0) scale(1);opacity:0}
+  25% {opacity:.8}
+  75% {opacity:.4}
+  100%{transform:translate(var(--tx,0px),-90px) scale(.2);opacity:0}
+}
+.history-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:18px;
+}
+.history-title{
+  color:rgba(255,255,255,.35);font-size:10px;letter-spacing:2.5px;
+  text-transform:uppercase;
+}
+.history-dots{display:flex;gap:7px;align-items:center}
+.h-dot{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:900;transition:.2s;
+}
+.h-dot.goal{
+  background:rgba(0,200,83,.18);border:1.5px solid rgba(0,200,83,.55);
+  color:#00C853;box-shadow:0 0 8px rgba(0,200,83,.2);
+}
+.h-dot.block{
+  background:rgba(255,87,34,.12);border:1.5px solid rgba(255,87,34,.35);
+  color:#FF7043;
+}
+.stats-row{display:flex;gap:10px}
+.stat-card{
+  flex:1;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:12px 6px;text-align:center;
+  backdrop-filter:blur(4px);
+}
+.hot-card{
+  background:rgba(255,200,0,.06);border-color:rgba(255,200,0,.18);
+}
+.stat-val{color:#fff;font-size:20px;font-weight:900;margin-bottom:4px}
+.stat-val.gold{color:var(--gold)}
+.stat-lbl{color:rgba(255,255,255,.35);font-size:10px;letter-spacing:.5px}
+
+/* ── BET CONTROLS ── */
+.bet-panel{
+  position:absolute;bottom:0;width:100%;z-index:15;
+  background:linear-gradient(180deg,transparent,rgba(6,9,20,.95) 25%,rgba(6,9,20,1) 100%);
+  padding:20px 20px 36px;
+}
+.bet-amount-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:12px 16px;margin-bottom:12px;
+}
+.bet-label{color:rgba(255,255,255,.5);font-size:12px}
+.bet-value{color:#fff;font-size:20px;font-weight:800;letter-spacing:.5px}
+.bet-btns{display:flex;gap:6px}
+.bet-adj{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.15s;
+}
+.bet-adj:active{background:rgba(255,255,255,.25);transform:scale(.92)}
+
+.quick-bets{display:flex;gap:8px;margin-bottom:14px}
+.qbet{
+  flex:1;padding:8px 0;border-radius:10px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.7);font-size:12px;font-weight:600;
+  text-align:center;cursor:pointer;transition:.15s;
+}
+.qbet:active,.qbet.active{background:rgba(255,200,0,.15);border-color:rgba(255,200,0,.4);color:var(--gold)}
+
+.actions{display:flex;gap:10px}
+.btn-confirm{
+  flex:1;padding:16px;border-radius:16px;
+  background:linear-gradient(135deg,#00C853,#00A844);
+  color:#fff;font-size:16px;font-weight:800;text-align:center;
+  cursor:pointer;transition:.15s;letter-spacing:.5px;
+  box-shadow:0 4px 20px rgba(0,200,83,.4);
+}
+.btn-confirm:active{transform:scale(.97);box-shadow:0 2px 10px rgba(0,200,83,.3)}
+.btn-auto{
+  width:80px;padding:16px 0;border-radius:16px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);font-size:13px;font-weight:600;text-align:center;
+  cursor:pointer;transition:.15s;
+}
+.btn-auto:active{background:rgba(255,255,255,.15)}
+.btn-auto.on{background:rgba(255,200,0,.15);border-color:rgba(255,200,0,.4);color:var(--gold)}
+
+/* ── SHOOT SCENE ── */
+.shoot-hint{
+  position:absolute;bottom:84px;left:50%;transform:translateX(-50%);
+  color:rgba(255,255,255,.75);font-size:13px;white-space:nowrap;z-index:15;
+  animation:pulse 1.5s ease-in-out infinite;transition:opacity .2s;
+  text-shadow:0 1px 4px rgba(0,0,0,.6);
+}
+/* Aimed cell highlight during drag */
+.cell.aimed{
+  background:rgba(255,215,0,.35) !important;
+  border-color:#FFD700 !important;
+  color:#FFD700 !important;
+  transform:scale(1.12) !important;
+  box-shadow:0 0 18px rgba(255,215,0,.5) !important;
+}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+.shoot-bet-display{
+  position:absolute;bottom:52px;left:50%;transform:translateX(-50%);
+  color:var(--gold);font-size:18px;font-weight:800;z-index:15;
+  text-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+
+/* ── INLINE RESULT PANEL (slides up inside shoot scene) ── */
+.shoot-result-panel{
+  position:absolute;bottom:0;left:0;right:0;z-index:35;
+  padding:24px 24px 44px;text-align:center;
+  background:linear-gradient(180deg,transparent,rgba(6,9,20,.92) 22%,rgba(6,9,20,.98) 100%);
+  transform:translateY(100%);
+  transition:transform .42s cubic-bezier(.34,.9,.64,1);
+}
+.shoot-result-panel.open{transform:translateY(0)}
+.srp-label{color:rgba(255,255,255,.5);font-size:13px;margin-bottom:6px}
+.srp-amount{font-size:32px;font-weight:900;letter-spacing:.5px;margin-bottom:16px}
+.srp-amount.win{color:var(--gold)}
+.srp-amount.lose{color:rgba(255,255,255,.8)}
+.srp-btn{
+  display:inline-block;padding:16px 56px;border-radius:16px;
+  font-size:16px;font-weight:800;cursor:pointer;transition:.15s;letter-spacing:.5px;
+}
+.srp-btn.win-btn{
+  background:linear-gradient(135deg,#00C853,#00A844);color:#fff;
+  box-shadow:0 4px 24px rgba(0,200,83,.45);
+}
+.srp-btn.lose-btn{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;
+}
+
+/* ── SHOOT REACTION ── */
+@keyframes reactionPop{
+  0%{transform:scale(0) rotate(-6deg);opacity:0}
+  60%{transform:scale(1.2) rotate(3deg);opacity:1}
+  100%{transform:scale(1) rotate(-1deg);opacity:1}
+}
+.reaction-active{animation:reactionPop .35s cubic-bezier(.34,1.56,.64,1) forwards !important}
+
+/* ── BLOCK EFFECT ── */
+.block-overlay{
+  position:absolute;inset:0;z-index:25;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,rgba(255,50,0,.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+.block-text{
+  font-size:72px;font-weight:900;color:#FF5722;
+  text-shadow:0 0 40px rgba(255,87,34,.8),0 0 80px rgba(255,87,34,.4);
+  letter-spacing:-2px;
+  animation:blockPop .4s cubic-bezier(.34,1.56,.64,1) forwards;
+  transform:scale(0) rotate(-8deg);opacity:0;
+}
+@keyframes blockPop{
+  0%{transform:scale(0) rotate(-8deg);opacity:0}
+  60%{transform:scale(1.15) rotate(3deg);opacity:1}
+  100%{transform:scale(1) rotate(-2deg);opacity:1}
+}
+
+/* Screen shake */
+@keyframes shake{
+  0%,100%{transform:translate(0)}
+  10%{transform:translate(-8px,2px)}
+  20%{transform:translate(8px,-2px)}
+  30%{transform:translate(-6px,4px)}
+  40%{transform:translate(6px,-4px)}
+  50%{transform:translate(-4px,2px)}
+  60%{transform:translate(4px,-2px)}
+  70%{transform:translate(-2px,1px)}
+  80%{transform:translate(2px,-1px)}
+  90%{transform:translate(-1px,0)}
+}
+.shake{animation:shake .5s ease}
+
+/* Spark particles */
+.sparks{position:absolute;pointer-events:none;z-index:30}
+.spark{
+  position:absolute;width:6px;height:6px;border-radius:50%;
+  animation:sparkFly .6s ease-out forwards;
+}
+@keyframes sparkFly{
+  0%{transform:translate(0,0) scale(1);opacity:1}
+  100%{opacity:0;transform:var(--tx,translate(40px,-40px)) scale(0)}
+}
+
+/* Block result info */
+.result-bar{
+  position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+  z-index:20;text-align:center;
+}
+.result-label{color:rgba(255,255,255,.5);font-size:13px;margin-bottom:4px}
+.result-amount{color:var(--gold);font-size:22px;font-weight:800}
+.btn-retry{
+  margin-top:14px;padding:14px 40px;border-radius:14px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:15px;font-weight:700;cursor:pointer;
+  display:inline-block;transition:.15s;
+}
+.btn-retry:active{background:rgba(255,255,255,.2)}
+
+/* ── WIN SCENE ── */
+.win-scene{
+  position:absolute;inset:0;z-index:40;
+  background:linear-gradient(180deg,#0D1B3E 0%,#0A1628 100%);
+  display:flex;flex-direction:column;align-items:center;
+}
+/* Win crowd */
+.win-crowd{
+  width:100%;height:180px;position:relative;overflow:hidden;flex-shrink:0;
+  background:linear-gradient(180deg,rgba(30,60,100,.9),rgba(10,20,50,.7));
+}
+.win-crowd-figures{
+  position:absolute;bottom:0;left:0;right:0;height:100%;
+  display:flex;align-items:flex-end;justify-content:space-around;padding:0 10px;
+}
+.win-fig{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  animation:winFigBounce 0.8s ease-in-out infinite;
+}
+.win-fig:nth-child(odd){animation-delay:.15s}
+.win-fig:nth-child(3n){animation-delay:.3s}
+@keyframes winFigBounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+.fig-head{
+  width:18px;height:18px;border-radius:50%;
+  background:linear-gradient(135deg,#FFCD94,#E8A870);
+}
+.fig-body{
+  width:14px;height:28px;border-radius:4px;
+}
+.fig-arms{
+  position:absolute;top:18px;left:-8px;right:-8px;height:12px;
+  display:flex;justify-content:space-between;
+}
+.fig-arm{width:8px;height:3px;border-radius:2px;margin-top:4px}
+.fig-legs{display:flex;gap:4px;margin-top:2px}
+.fig-leg{width:5px;height:18px;border-radius:3px}
+
+/* GOAL text */
+.goal-text{
+  font-size:88px;font-weight:900;color:transparent;
+  background:linear-gradient(135deg,#FFD700,#FF8C00,#FFD700);
+  -webkit-background-clip:text;background-clip:text;
+  text-shadow:none;letter-spacing:-2px;line-height:1;
+  animation:goalAppear .5s cubic-bezier(.34,1.56,.64,1) forwards;
+  transform:scale(0);opacity:0;margin-top:-10px;
+  filter:drop-shadow(0 0 30px rgba(255,200,0,.6));
+}
+@keyframes goalAppear{
+  0%{transform:scale(0);opacity:0}
+  70%{transform:scale(1.1);opacity:1}
+  100%{transform:scale(1);opacity:1}
+}
+.goal-exclaim{
+  font-size:88px;color:#FF5722;
+  filter:drop-shadow(0 0 20px rgba(255,87,34,.6));
+}
+
+.win-amount-card{
+  background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,140,0,.1));
+  border:1.5px solid rgba(255,215,0,.4);
+  border-radius:20px;padding:16px 40px;margin-top:8px;text-align:center;
+  box-shadow:0 0 40px rgba(255,200,0,.15);
+}
+.win-label{color:rgba(255,255,255,.6);font-size:13px;margin-bottom:4px}
+.win-amount{
+  color:var(--gold);font-size:38px;font-weight:900;letter-spacing:.5px;
+  animation:countUp .8s ease-out;
+}
+@keyframes countUp{
+  0%{transform:scale(.8) translateY(10px);opacity:0}
+  100%{transform:scale(1) translateY(0);opacity:1}
+}
+
+.win-multiplier{
+  background:rgba(255,87,34,.15);border:1px solid rgba(255,87,34,.4);
+  border-radius:10px;padding:4px 14px;margin-top:8px;
+  color:#FF8A65;font-size:13px;font-weight:700;
+}
+
+.btn-play-again{
+  margin-top:20px;padding:18px 60px;border-radius:18px;
+  background:linear-gradient(135deg,#00C853,#00A844);
+  color:#fff;font-size:17px;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 30px rgba(0,200,83,.5);
+  animation:playAgainPulse 2s ease-in-out infinite;
+  letter-spacing:.5px;
+}
+@keyframes playAgainPulse{
+  0%,100%{box-shadow:0 4px 30px rgba(0,200,83,.5)}
+  50%{box-shadow:0 4px 50px rgba(0,200,83,.8),0 0 80px rgba(0,200,83,.3)}
+}
+.btn-play-again:active{transform:scale(.96)}
+
+/* Confetti canvas */
+#confetti{position:absolute;inset:0;pointer-events:none;z-index:50}
+
+/* ── CANVAS for particles ── */
+#fx-canvas{position:absolute;inset:0;pointer-events:none;z-index:35}
+
+/* ── SCENE VISIBILITY ── */
+.scene{position:absolute;inset:0;transition:opacity .3s}
+.scene.hidden{opacity:0;pointer-events:none}
+.scene.visible{opacity:1;pointer-events:all}
+
+/* ── FLARE on click ── */
+.flare{
+  position:absolute;width:60px;height:60px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,200,0,.6) 0%,transparent 70%);
+  pointer-events:none;transform:translate(-50%,-50%) scale(0);
+  animation:flarePop .4s ease-out forwards;z-index:50;
+}
+@keyframes flarePop{
+  0%{transform:translate(-50%,-50%) scale(0);opacity:1}
+  100%{transform:translate(-50%,-50%) scale(2.5);opacity:0}
+}
+
+/* ── LOADING BAR ── */
+.intro-screen{
+  position:absolute;inset:0;z-index:100;
+  background:linear-gradient(180deg,#05091A,#0D1B3E);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+}
+.intro-logo{
+  font-size:72px;filter:drop-shadow(0 0 30px rgba(255,200,0,.5));
+  animation:logoBounce 1s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes logoBounce{
+  0%{transform:scale(0);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+.intro-title{
+  font-size:28px;font-weight:900;color:transparent;
+  background:linear-gradient(135deg,#FFD700,#FF8C00);
+  -webkit-background-clip:text;background-clip:text;
+  letter-spacing:2px;
+}
+.intro-sub{color:rgba(255,255,255,.4);font-size:13px;letter-spacing:3px;text-transform:uppercase}
+.load-bar-wrap{
+  width:200px;height:4px;background:rgba(255,255,255,.1);border-radius:2px;
+  overflow:hidden;
+}
+.load-bar{
+  height:100%;background:linear-gradient(90deg,#00C853,#FFD700);
+  border-radius:2px;width:0;transition:width .05s;
+}
+.intro-tap{
+  color:rgba(255,255,255,.5);font-size:14px;
+  animation:pulse 1.5s ease-in-out infinite;
+  cursor:pointer;
+}
+
+/* ── ODDS TICKER ── */
+.odds-row{
+  display:flex;gap:8px;padding:8px 16px;overflow:hidden;
+  position:absolute;top:56px;left:0;right:0;z-index:12;
+}
+.odds-chip{
+  flex-shrink:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,.5);
+  white-space:nowrap;
+}
+.odds-chip span{color:#4CAF50;font-weight:700;margin-left:4px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:390px){
+  #app{width:100vw;border-radius:0}
+  .ball{width:44px;height:44px}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- FX layers -->
+  <canvas id="fx-canvas"></canvas>
+  <canvas id="confetti"></canvas>
+
+  <!-- ══ INTRO SCREEN ══ -->
+  <div class="intro-screen" id="intro">
+    <div class="intro-logo">⚽</div>
+    <div class="intro-title">点球对决</div>
+    <div class="intro-sub">Penalty Showdown</div>
+    <div class="load-bar-wrap"><div class="load-bar" id="loadBar"></div></div>
+    <div class="intro-tap" id="introTap" onclick="startGame()" style="opacity:0">轻触开始</div>
+  </div>
+
+  <!-- ══ SCENE: BET ══ -->
+  <div class="scene visible" id="scene-bet">
+    <div class="stadium"><div class="lights"></div></div>
+    <div class="crowd"></div>
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="btn-exit" onclick="exitGame()">退出</div>
+      <div class="balance">
+        <span class="icon">💰</span>
+        <span id="balanceDisplay">$3000.00k</span>
+        <div class="plus-btn">+</div>
+      </div>
+      <div class="topnav">
+        <span>规则</span><span>记录</span><span>设定</span>
+      </div>
+    </div>
+
+    <!-- Odds ticker -->
+    <div class="odds-row" id="oddsRow"></div>
+
+    <!-- Field -->
+    <div class="field">
+      <div class="grass"><div class="grass-stripes"></div></div>
+      <div class="penalty-arc"></div>
+      <div class="center-line"></div>
+      <div class="goal-shadow"></div>
+
+      <!-- Goal -->
+      <div class="goal-wrap" id="betGoal">
+        <div class="post-l"></div>
+        <div class="post-r"></div>
+        <div class="crossbar"></div>
+        <div class="net"></div>
+      </div>
+
+      <!-- Goalkeeper -->
+      <div class="gk" id="gk">
+        <div class="gk-body">
+          <div class="gk-head"></div>
+          <div class="gk-torso">
+            <div class="gk-arms">
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div class="gk-arm l"></div>
+                <div class="gk-glove"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div class="gk-arm r"></div>
+                <div class="gk-glove"></div>
+              </div>
+            </div>
+          </div>
+          <div class="gk-shorts"></div>
+          <div class="gk-legs">
+            <div class="gk-leg"></div>
+            <div class="gk-leg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ball -->
+      <div class="ball-wrap ball-idle" id="ball" style="bottom:180px;left:50%;transform:translateX(-50%)">
+        <div class="ball">
+          <div class="ball-patch"></div>
+        </div>
+        <div class="ball-shadow"></div>
+      </div>
+    </div>
+
+    <!-- Middle section: history + stats + particles -->
+    <div class="bet-middle">
+      <div class="bp-canvas" id="betParticles"></div>
+      <div class="history-wrap">
+        <div class="history-title">近期战绩</div>
+        <div class="history-dots" id="historyDots"></div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-val" id="statGoalRate">—</div>
+          <div class="stat-lbl">进球率</div>
+        </div>
+        <div class="stat-card hot-card">
+          <div class="stat-val gold" id="statHotZone">4.0×</div>
+          <div class="stat-lbl">🔥 热门倍率</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statStreak">—</div>
+          <div class="stat-lbl">最高连胜</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bet Panel -->
+    <div class="bet-panel">
+      <div class="bet-amount-row">
+        <div>
+          <div class="bet-label">下注金额</div>
+          <div class="bet-value" id="betDisplay">$100.00k</div>
+        </div>
+        <div class="bet-btns">
+          <div class="bet-adj" onclick="adjustBet(-1)">−</div>
+          <div class="bet-adj" onclick="adjustBet(1)">+</div>
+        </div>
+      </div>
+      <div class="quick-bets">
+        <div class="qbet active" onclick="setQuickBet(0,this)">$50k</div>
+        <div class="qbet" onclick="setQuickBet(1,this)">$100k</div>
+        <div class="qbet" onclick="setQuickBet(2,this)">$200k</div>
+        <div class="qbet" onclick="setQuickBet(3,this)">$500k</div>
+      </div>
+      <div class="actions">
+        <div class="btn-confirm" onclick="confirmBet()">确认下注</div>
+        <div class="btn-auto" id="autoBtn" onclick="toggleAuto()">切自动</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCENE: SHOOT ══ -->
+  <div class="scene hidden" id="scene-shoot">
+    <div class="stadium"><div class="lights"></div></div>
+    <div class="crowd"></div>
+
+    <div class="topbar">
+      <div class="btn-exit" onclick="exitToScene('bet')">退出</div>
+      <div class="balance">
+        <span class="icon">💰</span>
+        <span id="balanceDisplay2">$3000.00k</span>
+        <div class="plus-btn">+</div>
+      </div>
+      <div class="topnav">
+        <span>规则</span><span>记录</span><span>设定</span>
+      </div>
+    </div>
+
+    <div class="field" style="height:730px">
+      <div class="grass" style="height:530px"><div class="grass-stripes"></div></div>
+      <div class="penalty-arc" style="bottom:0;width:260px;height:110px"></div>
+      <div class="center-line" style="height:530px"></div>
+      <div class="goal-shadow" style="bottom:420px;width:400px"></div>
+
+      <div class="goal-wrap" id="shootGoal" style="bottom:420px;height:200px;width:374px">
+        <div class="post-l" style="height:206px"></div>
+        <div class="post-r" style="height:206px"></div>
+        <div class="crossbar"></div>
+        <div class="net"></div>
+        <div class="grid-overlay" id="cellGrid"></div>
+      </div>
+
+      <!-- Aim crosshair (shown during drag mode) -->
+      <div id="aimCrosshair" style="display:none;position:absolute;z-index:25;pointer-events:none;
+        width:54px;height:54px;border-radius:50%;transform:translate(-50%,-50%);
+        border:3px solid #FFD700;background:rgba(255,215,0,.22);
+        box-shadow:0 0 22px rgba(255,215,0,.8),inset 0 0 10px rgba(255,215,0,.3)">
+        <div id="aimMultiLabel" style="position:absolute;inset:0;display:flex;align-items:center;
+          justify-content:center;color:#FFD700;font-size:12px;font-weight:900"></div>
+      </div>
+
+      <!-- Goalkeeper in shoot scene -->
+      <div class="gk" id="gk3" style="bottom:420px">
+        <div class="gk-body">
+          <div class="gk-head"></div>
+          <div class="gk-torso">
+            <div class="gk-arms">
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div class="gk-arm l"></div><div class="gk-glove"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div class="gk-arm r"></div><div class="gk-glove"></div>
+              </div>
+            </div>
+          </div>
+          <div class="gk-shorts"></div>
+          <div class="gk-legs"><div class="gk-leg"></div><div class="gk-leg"></div></div>
+        </div>
+      </div>
+
+      <!-- Ball (bigger + charge ring) -->
+      <div class="ball-wrap ball-idle" id="shootBall" style="bottom:120px;left:50%;transform:translateX(-50%);touch-action:none">
+        <svg id="chargeSvg" viewBox="0 0 100 100" style="position:absolute;width:100px;height:100px;
+          top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;transition:opacity .15s">
+          <circle id="chargeCircle" cx="50" cy="50" r="44" fill="none" stroke="#FFD700"
+            stroke-width="3.5" stroke-dasharray="276.5" stroke-dashoffset="276.5"
+            transform="rotate(-90 50 50)" stroke-linecap="round"/>
+        </svg>
+        <div class="ball" style="width:100px;height:100px">
+          <div class="ball-patch"></div>
+        </div>
+        <div class="ball-shadow" style="width:90px;bottom:-14px"></div>
+      </div>
+    </div>
+
+    <!-- Instant reaction overlay (BLOCK! / GOAL!) -->
+    <div id="shootReaction" style="display:none;position:absolute;inset:0;z-index:30;
+      display:none;align-items:center;justify-content:center;pointer-events:none;
+      background:radial-gradient(ellipse at center,rgba(0,0,0,.1) 0%,transparent 70%)">
+      <div id="shootReactionText" style="font-size:76px;font-weight:900;letter-spacing:-2px;
+        text-align:center;transform:scale(0);opacity:0;transition:none"></div>
+    </div>
+
+    <div class="shoot-hint" id="shootHint">👆 点击目标位置射门</div>
+    <div class="shoot-bet-display" id="shootBetDisplay">$100.00k</div>
+
+    <!-- Inline result panel -->
+    <div class="shoot-result-panel" id="shootResultPanel">
+      <div class="srp-label" id="srpLabel"></div>
+      <div class="srp-amount" id="srpAmount"></div>
+      <div class="srp-btn" id="srpBtn" onclick="nextRound()"></div>
+    </div>
+  </div>
+
+  <!-- ══ SCENE: BLOCK ══ -->
+  <div class="scene hidden" id="scene-block">
+    <div class="stadium"><div class="lights"></div></div>
+    <div class="crowd"></div>
+
+    <div class="topbar">
+      <div class="btn-exit" onclick="exitToScene('bet')">退出</div>
+      <div class="balance">
+        <span class="icon">💰</span>
+        <span id="balanceDisplay3">$3000.00k</span>
+        <div class="plus-btn">+</div>
+      </div>
+      <div class="topnav">
+        <span>规则</span><span>记录</span><span>设定</span>
+      </div>
+    </div>
+
+    <div class="field" style="height:420px">
+      <div class="grass"><div class="grass-stripes"></div></div>
+      <div class="penalty-arc"></div>
+      <div class="goal-shadow"></div>
+
+      <div class="goal-wrap" id="blockGoal" style="bottom:120px">
+        <div class="post-l"></div>
+        <div class="post-r"></div>
+        <div class="crossbar"></div>
+        <div class="net"></div>
+      </div>
+
+      <div class="gk" id="gk2">
+        <div class="gk-body">
+          <div class="gk-head"></div>
+          <div class="gk-torso">
+            <div class="gk-arms">
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div class="gk-arm l"></div><div class="gk-glove"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div class="gk-arm r"></div><div class="gk-glove"></div>
+              </div>
+            </div>
+          </div>
+          <div class="gk-shorts"></div>
+          <div class="gk-legs"><div class="gk-leg"></div><div class="gk-leg"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCK! overlay -->
+    <div class="block-overlay" id="blockOverlay">
+      <div style="text-align:center">
+        <div class="block-text" id="blockText">BLOCK!</div>
+        <div style="color:rgba(255,255,255,.6);font-size:16px;margin-top:8px">守门员扑救成功</div>
+      </div>
+    </div>
+
+    <!-- Result bar -->
+    <div class="result-bar">
+      <div class="result-label">本局下注</div>
+      <div class="result-amount" id="blockBetDisplay">$100.00k</div>
+      <div class="btn-retry" onclick="confirmBet()">再试一次</div>
+    </div>
+  </div>
+
+  <!-- ══ SCENE: WIN ══ -->
+  <div class="scene hidden" id="scene-win">
+    <div class="topbar" style="position:relative;z-index:60">
+      <div class="btn-exit" onclick="exitToScene('bet')">退出</div>
+      <div class="balance">
+        <span class="icon">💰</span>
+        <span id="balanceDisplay4">$3000.00k</span>
+        <div class="plus-btn">+</div>
+      </div>
+      <div class="topnav">
+        <span>规则</span><span>记录</span><span>设定</span>
+      </div>
+    </div>
+
+    <!-- Crowd celebration -->
+    <div class="win-crowd" id="winCrowd">
+      <div class="win-crowd-figures" id="winFigures"></div>
+    </div>
+
+    <!-- Goal text + amount -->
+    <div style="display:flex;flex-direction:column;align-items:center;margin-top:10px;position:relative;z-index:55">
+      <div style="display:flex;align-items:center;gap:4px">
+        <div class="goal-text" id="goalText">GOAL</div>
+        <div class="goal-text goal-exclaim" id="goalExclaim" style="font-size:88px;color:#FF5722;background:none;-webkit-background-clip:unset">!</div>
+      </div>
+      <div style="color:rgba(255,255,255,.5);font-size:13px;margin-top:4px">进球得分！</div>
+
+      <div class="win-amount-card" style="margin-top:16px">
+        <div class="win-label">赢得奖金</div>
+        <div class="win-amount" id="winAmountDisplay">$250.00k</div>
+      </div>
+      <div class="win-multiplier" id="winMultiplier">× 2.5 倍率</div>
+    </div>
+
+    <div class="btn-play-again" onclick="playAgain()">再来一局</div>
+
+    <!-- Animated ball in net -->
+    <div style="position:relative;z-index:55;margin-top:16px">
+      <div class="ball" style="width:36px;height:36px;opacity:.6;margin:0 auto;animation:ballBounce 1s ease-in-out infinite"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  GAME STATE
+// ═══════════════════════════════════════════════════
+const G = {
+  balance: 3000,
+  bet: 100,
+  betLevels: [50, 100, 200, 500],
+  betIdx: 1,
+  autoMode: false,
+  selectedCell: -1,
+  selectedMultiplier: 1,
+  currentScene: 'intro',
+  confettiActive: false,
+};
+
+// Multiplier grid (4 rows × 3 cols)
+const GRID = [
+  [1.5, 2.0, 2.5, 2.0, 1.5],
+  [2.0, 3.0, 4.0, 3.0, 2.0],
+  [1.5, 2.5, 3.5, 2.5, 1.5],
+];
+const WIN_PROB = {1.5:.65, 2.0:.5, 2.5:.38, 3.0:.28, 3.5:.2, 4.0:.15};
+
+// ═══════════════════════════════════════════════════
+//  CANVAS SETUP
+// ═══════════════════════════════════════════════════
+const fxCanvas = document.getElementById('fx-canvas');
+const fxCtx = fxCanvas.getContext('2d');
+const confCanvas = document.getElementById('confetti');
+const confCtx = confCanvas.getContext('2d');
+
+function resizeCanvases() {
+  const app = document.getElementById('app');
+  const w = app.offsetWidth, h = app.offsetHeight;
+  [fxCanvas, confCanvas].forEach(c => { c.width = w; c.height = h; });
+}
+resizeCanvases();
+
+// ═══════════════════════════════════════════════════
+//  INTRO LOADING
+// ═══════════════════════════════════════════════════
+function runIntro() {
+  const bar = document.getElementById('loadBar');
+  const tap = document.getElementById('introTap');
+  let p = 0;
+  const iv = setInterval(() => {
+    p += Math.random() * 12 + 3;
+    if (p >= 100) { p = 100; clearInterval(iv); tap.style.opacity = '1'; }
+    bar.style.width = p + '%';
+  }, 80);
+}
+function startGame() {
+  document.getElementById('intro').style.transition = 'opacity .5s';
+  document.getElementById('intro').style.opacity = '0';
+  setTimeout(() => document.getElementById('intro').style.display = 'none', 500);
+  buildOddsTicker();
+  buildCellGrid();
+  buildWinFigures();
+  buildHistory();
+  buildBetParticles();
+  G.currentScene = 'bet';
+}
+
+// ═══════════════════════════════════════════════════
+//  BET SCENE HISTORY & STATS
+// ═══════════════════════════════════════════════════
+G.history = Array.from({length:10}, () => Math.random() > 0.48 ? 'block' : 'goal');
+
+function buildHistory() {
+  const dots = document.getElementById('historyDots');
+  if (!dots) return;
+  dots.innerHTML = G.history.slice(-10).map(r =>
+    `<div class="h-dot ${r}">${r==='goal'?'⚽':'🤚'}</div>`
+  ).join('');
+
+  const goals = G.history.filter(r=>r==='goal').length;
+  const total = G.history.length;
+  document.getElementById('statGoalRate').textContent = Math.round(goals/total*100)+'%';
+
+  let streak=0, maxStreak=0, prev='';
+  G.history.forEach(r=>{
+    if(r==='goal'&&r===prev) streak++; else streak = r==='goal'?1:0;
+    maxStreak = Math.max(maxStreak,streak); prev=r;
+  });
+  document.getElementById('statStreak').textContent = maxStreak+'连';
+}
+
+function addHistoryResult(isGoal) {
+  G.history.push(isGoal ? 'goal' : 'block');
+  if (G.history.length > 10) G.history.shift();
+  buildHistory();
+}
+
+function buildBetParticles() {
+  const c = document.getElementById('betParticles');
+  if (!c) return;
+  c.innerHTML = '';
+  for (let i = 0; i < 14; i++) {
+    const p = document.createElement('div');
+    p.className = 'bp';
+    const s = 3 + Math.random() * 5;
+    p.style.cssText = `width:${s}px;height:${s}px;left:${5+Math.random()*90}%;bottom:${Math.random()*100}%;`
+      + `--dur:${3.5+Math.random()*4}s;--d:${Math.random()*5}s;--tx:${(Math.random()-.5)*28}px`;
+    c.appendChild(p);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  ODDS TICKER
+// ═══════════════════════════════════════════════════
+function buildOddsTicker() {
+  const row = document.getElementById('oddsRow');
+  const players = ['张伟','李强','王磊','刘洋','陈辉','杨帆','赵明'];
+  const amounts = [200,500,150,300,1000,250,800];
+  row.innerHTML = players.map((p,i) =>
+    `<div class="odds-chip">${p}<span>+$${amounts[i]}k</span></div>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════════════
+//  CELL GRID
+// ═══════════════════════════════════════════════════
+function buildCellGrid() {
+  const grid = document.getElementById('cellGrid');
+  grid.innerHTML = '';
+  grid.style.pointerEvents = '';
+  // Restore ball visibility
+  const shootBall = document.getElementById('shootBall');
+  if (shootBall) { shootBall.style.transition = ''; shootBall.style.opacity = '1'; }
+  // Reset reaction overlay
+  const overlay = document.getElementById('shootReaction');
+  if (overlay) overlay.style.display = 'none';
+  const hint = document.getElementById('shootHint');
+  if (hint) { hint.style.opacity = '1'; hint.textContent = '👆 点击目标位置 / 长按拖曳瞄准'; }
+  resetGK();
+  // Re-bind drag mechanic (re-clones ball element)
+  if (window._initDragShoot) window._initDragShoot();
+  GRID.flat().forEach((m, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'cell' + (m >= 3.0 ? ' jackpot' : m >= 2.5 ? ' hot' : '');
+    cell.dataset.idx = i;
+    cell.dataset.multi = m;
+    cell.innerHTML = `<span class="cell-multi">${m}x</span>`;
+    cell.addEventListener('click', () => shootAt(i, m, cell));
+    grid.appendChild(cell);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  WIN CROWD FIGURES
+// ═══════════════════════════════════════════════════
+const figColors = ['#E53935','#1E88E5','#43A047','#F4511E','#8E24AA','#00897B','#FB8C00','#6D4C41'];
+function buildWinFigures() {
+  const wrap = document.getElementById('winFigures');
+  wrap.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const c = figColors[i % figColors.length];
+    const div = document.createElement('div');
+    div.className = 'win-fig';
+    div.style.animationDelay = (i * 0.1) + 's';
+    div.innerHTML = `
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center">
+        <div class="fig-head"></div>
+        <div class="fig-body" style="background:${c}"></div>
+        <div class="fig-arms">
+          <div class="fig-arm" style="background:${c}"></div>
+          <div class="fig-arm" style="background:${c}"></div>
+        </div>
+        <div class="fig-legs">
+          <div class="fig-leg" style="background:#333"></div>
+          <div class="fig-leg" style="background:#333"></div>
+        </div>
+      </div>`;
+    wrap.appendChild(div);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  SCENE MANAGEMENT
+// ═══════════════════════════════════════════════════
+function showScene(id) {
+  document.querySelectorAll('.scene').forEach(s => {
+    s.classList.remove('visible');
+    s.classList.add('hidden');
+  });
+  const s = document.getElementById('scene-' + id);
+  s.classList.remove('hidden');
+  s.classList.add('visible');
+  G.currentScene = id;
+  updateBalanceDisplays();
+}
+
+function updateBalanceDisplays() {
+  const b = '$' + G.balance.toFixed(0) + '.00k';
+  ['balanceDisplay','balanceDisplay2','balanceDisplay3','balanceDisplay4'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = b;
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  BET CONTROLS
+// ═══════════════════════════════════════════════════
+function adjustBet(dir) {
+  G.betIdx = Math.max(0, Math.min(G.betLevels.length - 1, G.betIdx + dir));
+  G.bet = G.betLevels[G.betIdx];
+  updateBetDisplay();
+}
+function setQuickBet(idx, el) {
+  G.betIdx = idx;
+  G.bet = G.betLevels[idx];
+  document.querySelectorAll('.qbet').forEach(q => q.classList.remove('active'));
+  el.classList.add('active');
+  updateBetDisplay();
+}
+function updateBetDisplay() {
+  document.getElementById('betDisplay').textContent = '$' + G.bet + '.00k';
+  document.getElementById('shootBetDisplay').textContent = '$' + G.bet + '.00k';
+  document.getElementById('blockBetDisplay').textContent = '$' + G.bet + '.00k';
+}
+function toggleAuto() {
+  G.autoMode = !G.autoMode;
+  document.getElementById('autoBtn').classList.toggle('on', G.autoMode);
+}
+function confirmBet() {
+  if (G.bet > G.balance) { flashBalance(); return; }
+  showScene('shoot');
+  resetGK();
+  buildCellGrid();
+}
+function flashBalance() {
+  const el = document.querySelector('.balance');
+  el.style.borderColor = '#FF5722';
+  setTimeout(() => el.style.borderColor = '', 500);
+}
+function exitGame() { showScene('bet'); }
+function exitToScene(s) { showScene(s); }
+function playAgain() {
+  G.confettiActive = false;
+  confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+  showScene('shoot');
+  buildCellGrid();
+}
+
+function nextRound() {
+  // Close result panel and reset shoot scene for next round
+  G.confettiActive = false;
+  confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+  document.getElementById('shootResultPanel').classList.remove('open');
+  document.getElementById('shootReaction').style.display = 'none';
+  buildCellGrid();
+}
+
+// ═══════════════════════════════════════════════════
+//  SHOOT MECHANIC
+// ═══════════════════════════════════════════════════
+function shootAt(idx, multi, cellEl) {
+  // Prevent double clicks
+  document.getElementById('cellGrid').style.pointerEvents = 'none';
+
+  G.selectedCell = idx;
+  G.selectedMultiplier = multi;
+
+  // Highlight selected cell
+  document.querySelectorAll('.cell').forEach(c => c.classList.remove('selected'));
+  cellEl.classList.add('selected');
+
+  // Flare effect on click
+  spawnFlare(cellEl);
+
+  // Short delay then animate
+  setTimeout(() => {
+    const win = Math.random() < (WIN_PROB[multi] || 0.4);
+    animateShot(idx, win, multi);
+  }, 300);
+}
+
+function animateShot(cellIdx, win, multi) {
+  const ball = document.getElementById('shootBall');
+  const grid = document.getElementById('cellGrid');
+  const cells = grid.querySelectorAll('.cell');
+  const targetCell = cells[cellIdx];
+  const col = cellIdx % 5; // 0-4 for 5 columns
+
+  // Fade out original ball seamlessly
+  ball.style.transition = 'opacity 0.08s';
+  ball.style.opacity = '0';
+
+  // Hide shoot hint
+  document.getElementById('shootHint').style.opacity = '0';
+
+  // Get positions
+  const ballRect = ball.getBoundingClientRect();
+  const cellRect = targetCell.getBoundingClientRect();
+  const appRect = document.getElementById('app').getBoundingClientRect();
+
+  const startX = ballRect.left + ballRect.width/2 - appRect.left;
+  const startY = ballRect.top + ballRect.height/2 - appRect.top;
+  const endX = cellRect.left + cellRect.width/2 - appRect.left;
+  const endY = cellRect.top + cellRect.height/2 - appRect.top;
+
+  // Launch ball animation
+  drawBallArc(startX, startY, endX, endY, win);
+
+  // Ball arrives → GK dives + instant reaction text
+  setTimeout(() => triggerShootReaction(win, col), 620);
+
+  // 1 second after reaction → show result panel (stays in shoot scene)
+  setTimeout(() => {
+    if (win) showWin(multi);
+    else showBlock(col);
+  }, 1620);
+}
+
+function triggerShootReaction(win, col) {
+  // Determine direction: cols 0-1 = left, 2 = center, 3-4 = right
+  const dir = col <= 1 ? 'l' : col >= 3 ? 'r' : 'c';
+
+  // Pick animation type and store for block scene
+  let animClass;
+  if (win) {
+    // Miss: GK goes wrong way or hesitates
+    const wrongDir = dir === 'l' ? 'r' : dir === 'r' ? 'l' : 'c';
+    animClass = 'miss-' + (Math.random() > 0.4 ? wrongDir : 'c');
+  } else {
+    // Randomly catch or deflect (no deflect-c needed, use catch-c)
+    const type = dir === 'c' ? 'catch' : (Math.random() > 0.5 ? 'catch' : 'deflect');
+    animClass = type + '-' + dir;
+  }
+  G.lastGKAnimClass = animClass;
+
+  const gk3 = document.getElementById('gk3');
+  gk3.className = 'gk';
+  void gk3.offsetWidth;
+  gk3.classList.add(animClass);
+
+  // Show reaction overlay
+  const overlay = document.getElementById('shootReaction');
+  const txt = document.getElementById('shootReactionText');
+  overlay.style.display = 'flex';
+
+  if (win) {
+    txt.textContent = 'GOAL!';
+    txt.style.color = '#FFD700';
+    txt.style.textShadow = '0 0 40px rgba(255,200,0,.9),0 0 80px rgba(255,200,0,.4)';
+    overlay.style.background = 'radial-gradient(ellipse at center,rgba(0,180,60,.25) 0%,transparent 70%)';
+    // Burst confetti immediately
+    G.confettiActive = true;
+    launchConfetti();
+  } else {
+    txt.textContent = 'BLOCK!';
+    txt.style.color = '#FF5722';
+    txt.style.textShadow = '0 0 40px rgba(255,87,34,.9),0 0 80px rgba(255,87,34,.4)';
+    overlay.style.background = 'radial-gradient(ellipse at center,rgba(255,50,0,.2) 0%,transparent 70%)';
+    const app = document.getElementById('app');
+    app.classList.remove('shake');
+    void app.offsetWidth;
+    app.classList.add('shake');
+    spawnSparks(195, 280);
+  }
+
+  txt.className = '';
+  void txt.offsetWidth;
+  txt.classList.add('reaction-active');
+}
+
+// ═══════════════════════════════════════════════════
+//  BALL SHOT ANIMATION (straight, fast, speed lines)
+// ═══════════════════════════════════════════════════
+function drawBallArc(x1, y1, x2, y2, win) {
+  const dur = 480; // total flight time
+  const start = performance.now();
+  const dx = x2 - x1, dy = y2 - y1;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  const nx = dx/dist, ny = dy/dist; // direction unit vector
+
+  // Pre-generate speed line offsets (fixed per shot, no flicker)
+  const speedLines = Array.from({length:8}, () => ({
+    perp: (Math.random()-0.5)*28,
+    len: 18 + Math.random()*28,
+    w: 0.8 + Math.random()*1.2,
+  }));
+
+  function frame(now) {
+    const t = Math.min((now - start) / dur, 1);
+    // Cubic ease-in: slow at kick, rockets to goal
+    const ease = t * t * t;
+
+    fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+
+    const bx = x1 + dx * ease;
+    const by = y1 + dy * ease;
+
+    // ── Motion blur trail (straight, fading circles) ──
+    const trailSteps = 10;
+    for (let i = 1; i <= trailSteps; i++) {
+      const tp = Math.max(0, ease - i * 0.055);
+      const tx = x1 + dx * tp;
+      const ty = y1 + dy * tp;
+      const tr = 20 * (1 - tp * 0.5);
+      const alpha = ((trailSteps - i) / trailSteps) * 0.28 * Math.min(ease * 3, 1);
+      fxCtx.beginPath();
+      fxCtx.arc(tx, ty, tr, 0, Math.PI*2);
+      fxCtx.fillStyle = `rgba(255,255,255,${alpha})`;
+      fxCtx.fill();
+    }
+
+    // ── Speed lines (appear after first 20% of flight) ──
+    if (ease > 0.15) {
+      const lineAlpha = Math.min((ease - 0.15) / 0.3, 1) * 0.55;
+      fxCtx.lineCap = 'round';
+      speedLines.forEach(sl => {
+        const px = -ny * sl.perp, py = nx * sl.perp;
+        fxCtx.beginPath();
+        fxCtx.moveTo(bx + px,           by + py);
+        fxCtx.lineTo(bx + px - nx*sl.len, by + py - ny*sl.len);
+        fxCtx.strokeStyle = `rgba(255,255,255,${lineAlpha * sl.w * 0.7})`;
+        fxCtx.lineWidth = sl.w;
+        fxCtx.stroke();
+      });
+    }
+
+    // ── Ball (starts same size as DOM ball r=30, shrinks into goal) ──
+    const r = 30 * (1 - ease * 0.62);
+    fxCtx.save();
+    fxCtx.translate(bx, by);
+    fxCtx.rotate(ease * Math.PI * 8); // fast spin
+
+    const grad = fxCtx.createRadialGradient(-r*0.3,-r*0.3, 0, 0,0, r);
+    grad.addColorStop(0, '#fff');
+    grad.addColorStop(0.5, '#ddd');
+    grad.addColorStop(1, '#999');
+    fxCtx.beginPath();
+    fxCtx.arc(0, 0, r, 0, Math.PI*2);
+    fxCtx.fillStyle = grad;
+    fxCtx.shadowColor = 'rgba(0,0,0,.6)';
+    fxCtx.shadowBlur = 8;
+    fxCtx.fill();
+
+    if (r > 3) {
+      fxCtx.fillStyle = 'rgba(0,0,0,.75)';
+      [[0,-r*0.38],[r*0.33,r*0.24],[-r*0.33,r*0.24]].forEach(([px,py]) => {
+        fxCtx.beginPath();
+        fxCtx.arc(px, py, r*0.21, 0, Math.PI*2);
+        fxCtx.fill();
+      });
+    }
+    fxCtx.restore();
+
+    // ── Impact flash at arrival ──
+    if (t > 0.88) {
+      const fp = (t - 0.88) / 0.12;
+      const flashR = 15 + fp * 50;
+      const flashA = (1 - fp) * 0.85;
+      const flashGrad = fxCtx.createRadialGradient(x2,y2,0, x2,y2,flashR);
+      flashGrad.addColorStop(0, `rgba(${win?'80,255,140':'255,120,40'},${flashA})`);
+      flashGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      fxCtx.beginPath();
+      fxCtx.arc(x2, y2, flashR, 0, Math.PI*2);
+      fxCtx.fillStyle = flashGrad;
+      fxCtx.fill();
+    }
+
+    if (t < 1) requestAnimationFrame(frame);
+    else setTimeout(() => fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height), 150);
+  }
+  requestAnimationFrame(frame);
+}
+
+// ═══════════════════════════════════════════════════
+//  SHOW BLOCK
+// ═══════════════════════════════════════════════════
+function showBlock(col) {
+  addHistoryResult(false);
+  // Stay in shoot scene — show inline result panel
+  const panel = document.getElementById('shootResultPanel');
+  document.getElementById('srpLabel').textContent = '本局下注';
+  const amt = document.getElementById('srpAmount');
+  amt.textContent = '$' + G.bet + '.00k';
+  amt.className = 'srp-amount lose';
+  const btn = document.getElementById('srpBtn');
+  btn.textContent = '再试一次';
+  btn.className = 'srp-btn lose-btn';
+  G.lastResultWin = false;
+  panel.classList.add('open');
+}
+
+function resetGK() {
+  ['gk','gk2','gk3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.className = 'gk';
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  SPARKS
+// ═══════════════════════════════════════════════════
+function spawnSparks(cx, cy) {
+  const app = document.getElementById('app');
+  for (let i = 0; i < 12; i++) {
+    const s = document.createElement('div');
+    s.className = 'spark';
+    const angle = (i / 12) * Math.PI * 2;
+    const dist = 40 + Math.random() * 40;
+    const tx = `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`;
+    s.style.cssText = `left:${cx}px;top:${cy}px;--tx:${tx};
+      background:${i%3===0?'#FFD700':i%3===1?'#FF5722':'#fff'};
+      animation-delay:${Math.random()*0.1}s`;
+    app.appendChild(s);
+    setTimeout(() => s.remove(), 800);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  FLARE ON CLICK
+// ═══════════════════════════════════════════════════
+function spawnFlare(el) {
+  const rect = el.getBoundingClientRect();
+  const appRect = document.getElementById('app').getBoundingClientRect();
+  const x = rect.left + rect.width/2 - appRect.left;
+  const y = rect.top + rect.height/2 - appRect.top;
+  const f = document.createElement('div');
+  f.className = 'flare';
+  f.style.left = x + 'px';
+  f.style.top = y + 'px';
+  document.getElementById('app').appendChild(f);
+  setTimeout(() => f.remove(), 500);
+}
+
+// ═══════════════════════════════════════════════════
+//  SHOW WIN
+// ═══════════════════════════════════════════════════
+function showWin(multi) {
+  addHistoryResult(true);
+  const prize = G.bet * multi;
+  G.balance += prize - G.bet;
+  updateBalanceDisplays();
+
+  // Show inline result panel (stay in shoot scene, confetti already running)
+  const panel = document.getElementById('shootResultPanel');
+  document.getElementById('srpLabel').textContent = '赢得奖金 × ' + multi;
+  const amt = document.getElementById('srpAmount');
+  amt.textContent = '$' + prize.toFixed(0) + '.00k';
+  amt.className = 'srp-amount win';
+  const btn = document.getElementById('srpBtn');
+  btn.textContent = '再来一局';
+  btn.className = 'srp-btn win-btn';
+  G.lastResultWin = true;
+  panel.classList.add('open');
+}
+
+// ═══════════════════════════════════════════════════
+//  CONFETTI SYSTEM
+// ═══════════════════════════════════════════════════
+const CONF_COLORS = ['#FFD700','#FF5722','#00C853','#2196F3','#E91E63','#9C27B0','#FF9800','#fff'];
+let confettiParticles = [];
+
+function launchConfetti() {
+  confettiParticles = [];
+  for (let i = 0; i < 120; i++) {
+    confettiParticles.push({
+      x: Math.random() * confCanvas.width,
+      y: -20 - Math.random() * 100,
+      vx: (Math.random() - 0.5) * 4,
+      vy: 2 + Math.random() * 4,
+      rot: Math.random() * 360,
+      rSpd: (Math.random() - 0.5) * 8,
+      w: 8 + Math.random() * 6,
+      h: 4 + Math.random() * 3,
+      color: CONF_COLORS[Math.floor(Math.random() * CONF_COLORS.length)],
+      alpha: 1,
+      shape: Math.random() > 0.5 ? 'rect' : 'circle',
+    });
+  }
+  animateConfetti();
+}
+
+function animateConfetti() {
+  if (!G.confettiActive) return;
+  confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+
+  let alive = 0;
+  confettiParticles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.05; // gravity
+    p.vx *= 0.99;
+    p.rot += p.rSpd;
+    if (p.y > confCanvas.height + 20) {
+      // Reset from top for continuous effect
+      p.y = -20;
+      p.x = Math.random() * confCanvas.width;
+      p.vy = 2 + Math.random() * 3;
+    }
+    alive++;
+    confCtx.save();
+    confCtx.translate(p.x, p.y);
+    confCtx.rotate(p.rot * Math.PI / 180);
+    confCtx.fillStyle = p.color;
+    confCtx.globalAlpha = p.alpha;
+    if (p.shape === 'rect') {
+      confCtx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+    } else {
+      confCtx.beginPath();
+      confCtx.arc(0, 0, p.w/2, 0, Math.PI*2);
+      confCtx.fill();
+    }
+    confCtx.restore();
+  });
+
+  if (alive > 0 && G.confettiActive) requestAnimationFrame(animateConfetti);
+}
+
+// ═══════════════════════════════════════════════════
+//  DRAG-TO-AIM SHOOT MECHANIC
+// ═══════════════════════════════════════════════════
+function initDragShoot() {
+  const ball = document.getElementById('shootBall');
+  const svg  = document.getElementById('chargeSvg');
+  const circle = document.getElementById('chargeCircle');
+  const crosshair = document.getElementById('aimCrosshair');
+  const multiLabel = document.getElementById('aimMultiLabel');
+  const CIRCUMFERENCE = 276.5;
+
+  let holdTimer = null;
+  let chargeRaf = null;
+  let chargeStart = null;
+  let dragActive = false;
+  let aimCellIdx = -1;
+
+  function getXY(e) {
+    return e.touches ? {x:e.touches[0].clientX, y:e.touches[0].clientY}
+                     : {x:e.clientX, y:e.clientY};
+  }
+
+  function startCharge(e) {
+    // Only active when grid is clickable
+    if (document.getElementById('cellGrid').style.pointerEvents === 'none') return;
+    if (G.currentScene !== 'shoot') return;
+    e.preventDefault();
+
+    svg.style.opacity = '1';
+    chargeStart = performance.now();
+
+    // Animate ring fill
+    chargeRaf = requestAnimationFrame(function animRing(now) {
+      const p = Math.min((now - chargeStart) / 1000, 1);
+      circle.style.strokeDashoffset = CIRCUMFERENCE * (1 - p);
+      if (p < 1) chargeRaf = requestAnimationFrame(animRing);
+    });
+
+    holdTimer = setTimeout(() => {
+      dragActive = true;
+      circle.style.strokeDashoffset = '0';
+      circle.style.stroke = '#00FF87';
+      // Pulse ball
+      ball.querySelector('.ball').style.boxShadow = '0 0 24px rgba(0,255,135,.8), 0 4px 15px rgba(0,0,0,.5)';
+      // Update hint
+      document.getElementById('shootHint').textContent = '← 左右拖曳瞄准 →';
+    }, 1000);
+  }
+
+  function updateAim(cx, cy) {
+    const goalEl = document.getElementById('shootGoal');
+    const goalRect = goalEl.getBoundingClientRect();
+    const appRect  = document.getElementById('app').getBoundingClientRect();
+
+    const relX = Math.max(0, Math.min(goalRect.width,  cx - goalRect.left));
+    const relY = Math.max(0, Math.min(goalRect.height, cy - goalRect.top));
+    const col  = Math.min(4, Math.floor(relX / goalRect.width  * 5));
+    const row  = Math.min(2, Math.floor(relY / goalRect.height * 3));
+    const idx  = row * 5 + col;
+
+    if (idx !== aimCellIdx) {
+      aimCellIdx = idx;
+      const cells = document.querySelectorAll('#cellGrid .cell');
+      cells.forEach((c, i) => c.classList.toggle('aimed', i === idx));
+      const m = parseFloat(cells[idx].dataset.multi);
+      multiLabel.textContent = m + 'x';
+
+      const cellRect = cells[idx].getBoundingClientRect();
+      crosshair.style.left = (cellRect.left + cellRect.width/2  - appRect.left) + 'px';
+      crosshair.style.top  = (cellRect.top  + cellRect.height/2 - appRect.top)  + 'px';
+      crosshair.style.display = 'block';
+    }
+  }
+
+  function onMove(e) {
+    if (!dragActive) return;
+    e.preventDefault();
+    const {x, y} = getXY(e);
+    updateAim(x, y);
+  }
+
+  function onEnd(e) {
+    cancelAnimationFrame(chargeRaf);
+    clearTimeout(holdTimer);
+    svg.style.opacity = '0';
+    circle.style.strokeDashoffset = CIRCUMFERENCE;
+    circle.style.stroke = '#FFD700';
+    ball.querySelector('.ball').style.boxShadow = '';
+    document.getElementById('shootHint').textContent = '👆 点击目标位置 / 长按拖曳瞄准';
+
+    if (dragActive && aimCellIdx >= 0) {
+      // Fire shot at aimed cell
+      const cells = document.querySelectorAll('#cellGrid .cell');
+      cells.forEach(c => c.classList.remove('aimed'));
+      crosshair.style.display = 'none';
+      dragActive = false;
+      aimCellIdx = -1;
+      const targetCell = cells[aimCellIdx >= 0 ? aimCellIdx : 7]; // fallback center
+      // Re-read before using (aimCellIdx was just reset above - use local)
+      const lastIdx = parseInt(crosshair.dataset.lastIdx || '7');
+      const multi = parseFloat(cells[lastIdx].dataset.multi);
+      shootAt(lastIdx, multi, cells[lastIdx]);
+    } else {
+      dragActive = false;
+      aimCellIdx = -1;
+      document.querySelectorAll('#cellGrid .cell').forEach(c => c.classList.remove('aimed'));
+      crosshair.style.display = 'none';
+    }
+
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('touchend',  onEnd);
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup',   onEnd);
+  }
+
+  ball.addEventListener('touchstart', e => {
+    startCharge(e);
+    document.addEventListener('touchmove', onMove, {passive:false});
+    document.addEventListener('touchend',  onEnd);
+  }, {passive:false});
+
+  ball.addEventListener('mousedown', e => {
+    startCharge(e);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup',   onEnd);
+  });
+}
+
+// Fixed version - track aimCellIdx properly
+(function patchDragShoot() {
+  // Overwrite initDragShoot with a correct version after DOM loads
+  const _orig = initDragShoot;
+  window._initDragShoot = function() {
+    const ball = document.getElementById('shootBall');
+    const svg  = document.getElementById('chargeSvg');
+    const circle = document.getElementById('chargeCircle');
+    const crosshair = document.getElementById('aimCrosshair');
+    const multiLabel = document.getElementById('aimMultiLabel');
+    const CIRC = 276.5;
+    let holdTimer = null, chargeRaf = null, chargeStart = null;
+    let dragActive = false, aimIdx = -1;
+
+    function pt(e){ return e.touches?{x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY}; }
+
+    function startCharge(e) {
+      if (document.getElementById('cellGrid').style.pointerEvents==='none') return;
+      if (G.currentScene!=='shoot') return;
+      e.preventDefault();
+      svg.style.opacity='1'; chargeStart=performance.now();
+      chargeRaf=requestAnimationFrame(function r(now){
+        const p=Math.min((now-chargeStart)/1000,1);
+        circle.style.strokeDashoffset=CIRC*(1-p);
+        if(p<1) chargeRaf=requestAnimationFrame(r);
+      });
+      holdTimer=setTimeout(()=>{
+        dragActive=true;
+        circle.style.stroke='#00FF87';
+        ball.querySelector('.ball').style.boxShadow='0 0 24px rgba(0,255,135,.8),0 4px 15px rgba(0,0,0,.5)';
+        document.getElementById('shootHint').textContent='← 左右拖曳瞄准 →';
+      },1000);
+    }
+
+    function aim(cx,cy){
+      const gr=document.getElementById('shootGoal').getBoundingClientRect();
+      const ar=document.getElementById('app').getBoundingClientRect();
+      const col=Math.min(4,Math.max(0,Math.floor((cx-gr.left)/gr.width*5)));
+      const row=Math.min(2,Math.max(0,Math.floor((cy-gr.top)/gr.height*3)));
+      const idx=row*5+col;
+      if(idx===aimIdx) return;
+      aimIdx=idx;
+      const cells=document.querySelectorAll('#cellGrid .cell');
+      cells.forEach((c,i)=>c.classList.toggle('aimed',i===idx));
+      multiLabel.textContent=parseFloat(cells[idx].dataset.multi)+'x';
+      const cr=cells[idx].getBoundingClientRect();
+      crosshair.style.left=(cr.left+cr.width/2-ar.left)+'px';
+      crosshair.style.top=(cr.top+cr.height/2-ar.top)+'px';
+      crosshair.style.display='block';
+    }
+
+    function cancel(fire){
+      cancelAnimationFrame(chargeRaf); clearTimeout(holdTimer);
+      svg.style.opacity='0'; circle.style.strokeDashoffset=CIRC; circle.style.stroke='#FFD700';
+      ball.querySelector('.ball').style.boxShadow='';
+      document.getElementById('shootHint').textContent='👆 点击目标位置 / 长按拖曳瞄准';
+      document.querySelectorAll('#cellGrid .cell').forEach(c=>c.classList.remove('aimed'));
+      crosshair.style.display='none';
+      const fired=aimIdx; dragActive=false; aimIdx=-1;
+      if(fire&&fired>=0){
+        const cells=document.querySelectorAll('#cellGrid .cell');
+        if(cells[fired]){
+          const multi=parseFloat(cells[fired].dataset.multi);
+          shootAt(fired,multi,cells[fired]);
+        }
+      }
+      document.removeEventListener('touchmove',onMove);
+      document.removeEventListener('touchend',onEnd);
+      document.removeEventListener('mousemove',onMove);
+      document.removeEventListener('mouseup',onEnd);
+    }
+
+    function onMove(e){ if(!dragActive)return; e.preventDefault(); const {x,y}=pt(e); aim(x,y); }
+    function onEnd(){ cancel(dragActive&&aimIdx>=0); }
+
+    // Remove old listeners by replacing the element (clone trick)
+    const nb=ball.cloneNode(true); ball.parentNode.replaceChild(nb,ball);
+    const newBall=document.getElementById('shootBall');
+
+    newBall.addEventListener('touchstart',e=>{ startCharge(e); document.addEventListener('touchmove',onMove,{passive:false}); document.addEventListener('touchend',onEnd); },{passive:false});
+    newBall.addEventListener('mousedown',e=>{ startCharge(e); document.addEventListener('mousemove',onMove); document.addEventListener('mouseup',onEnd); });
+  };
+})();
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  resizeCanvases();
+  runIntro();
+  updateBetDisplay();
+  updateBalanceDisplays();
+});
+
+window.addEventListener('resize', resizeCanvases);
+
+// Prevent scrolling
+document.addEventListener('touchmove', e => e.preventDefault(), {passive:false});
+</script>
+</body>
+</html>
